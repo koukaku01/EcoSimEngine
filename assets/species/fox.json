@@ -1,0 +1,38 @@
+{
+    "name": "Fox",
+    "scientificName": "Vulpes vulpes",
+    "type": "mammal",
+    "diet": "omnivore",
+    "lifespanYears": 3,
+    "maxAgeYears": 6,
+    "weightKg": {
+        "min": 3.5,
+        "max": 7.5
+    },
+    "speedKmh": 50,
+    "reproduction": {
+        "gestationDays": 52,
+        "litterSize": {
+            "min": 4,
+            "max": 6
+        },
+        "breedingSeason": "winter"
+    },
+    "habitat": [
+        "forest",
+        "grassland",
+        "urban"
+    ],
+    "predators": [
+        "wolf",
+        "eagle",
+        "human"
+    ],
+    "prey": [
+        "rabbit",
+        "mouse",
+        "bird",
+        "insect",
+        "fruit"
+    ]
+}
