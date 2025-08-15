@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <stdexcept>
 
-///; #include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vector2.hpp>
 
 template <typename T>
 class Vec2

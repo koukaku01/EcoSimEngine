@@ -1,0 +1,17 @@
+# Visual Studio temp & settings
+.vs/
+*.vcxproj.user
+*.suo
+
+# Build outputs
+Debug/
+Release/
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+
+# OS stuff
+Thumbs.db
+.DS_Store
