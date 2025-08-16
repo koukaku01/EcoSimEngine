@@ -3,6 +3,7 @@
 #include "Vec2.hpp"
 
 enum class Sex { Male, Female };
+enum class BehaviorState { Idle, Wander, SeekFood, Flee, Reproduce };
 
 class Component
 {
@@ -15,6 +16,7 @@ class CTransform : public Component
 public:
     Vec2f pos{};
     Vec2f velocity{};
+    Vec2f acceleration{};
     float scale{ 1.0f };
 
     CTransform() = default;
@@ -76,4 +78,12 @@ public:
     float pregnancyDurationMax{ 10.0f };    // max pregnancy duration
 
     CReproductive() = default;
+};
+
+class CBehavior : public Component {
+public:
+    BehaviorState current{ BehaviorState::Idle };
+    float stateTimer{ 0.0f }; // how long to stay in current state
+
+    CBehavior() = default;
 };
