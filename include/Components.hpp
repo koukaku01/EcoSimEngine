@@ -2,34 +2,37 @@
 
 #include "Vec2.hpp"
 
+enum class Sex { Male, Female };
+
 class Component
 {
 public:
-    bool exists = false;
+    bool exists{ false };
 };
 
 class CTransform : public Component
 {
 public:
-    Vec2f pos = {0.0, 0.0};
-    Vec2f velocity = {0.0, 0.0};
-    float scale = 2;
+    Vec2f pos{};
+    Vec2f velocity{};
+    float scale{ 1.0f };
 
     CTransform() = default;
+
+    CTransform(const Vec2f& p, const Vec2f& v, float s)
+        : pos(p), velocity(v), scale(s) { }
     CTransform(const Vec2f &pos)
-        : pos(pos) {}
-    CTransform(const Vec2f &pos, const Vec2f &v, const float &scale)
-        : pos(pos), velocity(v), scale(scale) {}
+        : CTransform(pos, {}, scale) { }
 };
 
 class CSpecies : public Component
 {
 public:
-    std::string speciesName = "Unknown";
-    int age = 0;
+    std::string speciesName{"Unknown"};
+    int age{ 0 };
 
-    bool can_swim = false;
-    bool can_fly = false;
+    bool canSwim{};
+    bool canFly{};
 
     CSpecies() = default;
     CSpecies(const std::string &speciesName,int age)
@@ -39,25 +42,38 @@ public:
 class CHealth : public Component
 {
 public:
-    float health = 100.0f;
-    float maxHealth = 100.0f;
+    float health{ 100.0f };
+    float maxHealth{ 100.0f };
+
+	CHealth() = default;
+    explicit CHealth(float max) : health(max), maxHealth(max) {}
 };
+
+class CEnergy : public Component
+{
+public:
+    float current{ 100.0f };       // current energy/hunger level
+    float max{ 100.0f };           // maximum energy
+    float consumptionRate{ 1.0f }; // per second or tick
+
+    CEnergy() = default;
+};
+
 
 class CReproductive : public Component
 {
 public:
-    int sex = 0; // 0 = Male, 1 = Female
-    bool canReproduce = false;
-    bool isPregnant = false;
+    Sex sex{ Sex::Male };
 
-    float reproductionCooldown = 0.0f;     // Time until next reproduction can occur
-    float pregnancyDuration = 0.0f;        // Duration of pregnancy in seconds
-    float timePregnant = 0.0f;             // Time already spent pregnant
-    float reproductionCooldownMax = 10.0f; // Max time until next reproduction can occur
-    float pregnancyDurationMax = 10.0f;    // Max duration of pregnancy in seconds
+    bool canReproduce{ false };
+    bool isPregnant{ false };
+
+    float reproductionCooldown{ 0.0f };     // time until next reproduction
+    float pregnancyDuration{ 0.0f };        // time spent pregnant
+    float timePregnant{ 0.0f };             // elapsed pregnancy time
+
+    float reproductionCooldownMax{ 10.0f }; // max cooldown
+    float pregnancyDurationMax{ 10.0f };    // max pregnancy duration
+
     CReproductive() = default;
-    CReproductive(const int &sex, const float &reproductionCooldownMax, const float &pregnancyDurationMax, const bool &canReproduce, const bool &isPregnant)
-        : sex(sex), reproductionCooldownMax(reproductionCooldownMax), pregnancyDurationMax(pregnancyDurationMax), canReproduce(canReproduce), isPregnant(isPregnant) {}
-    CReproductive(const int &sex, const float &reproductionCooldownMax, const float &pregnancyDurationMax, const bool &canReproduce, const bool &isPregnant, const float &reproductionCooldown, const float &pregnancyDuration, const float &timePregnant)
-        : sex(sex), reproductionCooldownMax(reproductionCooldownMax), pregnancyDurationMax(pregnancyDurationMax), canReproduce(canReproduce), isPregnant(isPregnant), reproductionCooldown(reproductionCooldown), pregnancyDuration(pregnancyDuration), timePregnant(timePregnant) {}
 };
