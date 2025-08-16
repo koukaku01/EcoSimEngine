@@ -4,7 +4,7 @@
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
 
 #include "Assets.hpp"
 
@@ -92,10 +92,10 @@ sf::Sound& Assets::getSound(const std::string& name) {
 
 // getters for maps
 
-const std::map<std::string, sf::Texture>& Assets::getTextures() const {
+const std::map<std::string, sf::Texture>& Assets::getTextureMap() const {
     return m_textureMap;
 }
 
-std::map<std::string, std::unique_ptr<sf::Sound>>& Assets::getSounds() {
+std::map<std::string, std::unique_ptr<sf::Sound>>& Assets::getSoundMap() {
     return m_sounds;
 }

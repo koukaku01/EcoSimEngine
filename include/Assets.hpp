@@ -20,9 +20,7 @@ class Assets {
     std::map<std::string, std::unique_ptr<sf::Sound>> m_sounds; // store sounds as unique_ptr
 
 	void addTexture(const std::string& name, const std::string& path);
-
 	void addFont(const std::string& name, const std::string& path);
-
 	void addSound(const std::string& name, const std::string& path);
 
 public:
@@ -31,13 +29,11 @@ public:
 
     void loadFromFile(const json&j);
 
-    [[nodiscard]] const std::map<std::string, sf::Texture>& getTextures() const;
+	[[nodiscard]] const sf::Texture& getTexture(const std::string& name) const;
+	[[nodiscard]] const sf::Font& getFont(const std::string& name) const;
+	[[nodiscard]] sf::Sound& getSound(const std::string& name);
 
-    [[nodiscard]] std::map<std::string, std::unique_ptr<sf::Sound>>& getSounds();
+    [[nodiscard]] const std::map<std::string, sf::Texture>& getTextureMap() const;
+    [[nodiscard]] std::map<std::string, std::unique_ptr<sf::Sound>>& getSoundMap();
 
-    [[nodiscard]] const sf::Texture& getTexture(const std::string& name) const;
-
-    [[nodiscard]] const sf::Font& getFont(const std::string& name) const;
-
-    [[nodiscard]] sf::Sound& getSound(const std::string& name);
 };
