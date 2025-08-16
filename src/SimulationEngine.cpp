@@ -18,29 +18,40 @@ SimulationEngine::SimulationEngine(const std::string& path) {
 }
 
 void SimulationEngine::init(const std::string& path) {
-    // Load JSON config
-	std::ifstream ifs(path);
+    // --- Load JSON config ---
+    std::ifstream ifs(path);
     if (!ifs) {
-        throw std::runtime_error("Could not open config file: " + path + "(SimulationEngine)");
+        throw std::runtime_error("Could not open config file: " + path + " in SimulationEngine");
     }
+
     nlohmann::json json;
-    ifs >> json;
+    try {
+        ifs >> json;
+    }
+    catch (const nlohmann::json::parse_error& e) {
+        throw std::runtime_error(std::string("JSON parse error: ") + e.what());
+    }
 
-    // Parse window config
-	auto w = json["window"];
-    m_windowConfig.width = w["width"];
-	m_windowConfig.height = w["height"];
-    m_windowConfig.frameRate = w["frameRate"];
-	m_windowConfig.vsync = w["vsync"];
+    // --- Parse window config ---
+    auto w = json["window"];
+    m_windowConfig.width = w["width"].get<unsigned>();
+	m_windowConfig.height = w["height"].get<unsigned>();
+    m_windowConfig.frameRate = w["frameRate"].get<unsigned>();
+	m_windowConfig.vsync = w["vsync"].get<bool>();
 
-    // Apply window config
-    m_window.create(sf::VideoMode({ m_windowConfig.width, m_windowConfig.height })
-        , "Ecosystem Simulation");
+    // --- Create window ---
+    m_window.create(sf::VideoMode({ m_windowConfig.width, m_windowConfig.height }), "Ecosystem Simulation");
 	m_window.setFramerateLimit(m_windowConfig.frameRate);
 	m_window.setVerticalSyncEnabled(m_windowConfig.vsync);
 
-	// Load assets
-    m_assets.loadFromFile(json);
+    // --- Load assets ---
+    try {
+    std::string assetsPath = json["paths"]["assets"].get<std::string>();
+    m_assets.loadFromFile(assetsPath);
+    }
+    catch (const std::exception& e) {
+        throw std::runtime_error(std::string("Asset loading error: ") + e.what());
+    }
 
     /*
     if (!ImGui::SFML::Init(m_window)) {
@@ -48,6 +59,7 @@ void SimulationEngine::init(const std::string& path) {
     }
     */
 
+    // --- Set initial scene ---
     changeScene("MENU", std::make_shared<Scene_Menu>(this));
 }
 
@@ -56,7 +68,7 @@ std::shared_ptr<Scene> SimulationEngine::currentScene() {
 }
 
 bool SimulationEngine::isRunning() {
-    return m_running & m_window.isOpen(); // maybe '&&' instead of '&'?
+    return m_running && m_window.isOpen();
 }
 
 sf::RenderWindow& SimulationEngine::window() {

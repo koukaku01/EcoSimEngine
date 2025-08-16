@@ -59,15 +59,29 @@
     <ClInclude Include="include\Scene_Menu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\nlohmann\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\Roboto\Roboto-Italic-VariableFont_wdth,wght.ttf" />
     <Font Include="assets\fonts\Roboto\Roboto-VariableFont_wdth,wght.ttf" />
+    <Font Include="resources\assets\fonts\Roboto\Roboto-VariableFont_wdth,wght.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="resources\assets\assets.json" />
+    <None Include="resources\assets\sounds\foo_themeSong.ogg" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config\config.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\assets\textures\foo_rock1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\assets\textures\foo_stair.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 		"vsync": false
 	},
 	"font": {
-		"path": "assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf",
+		"path": "resources/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf",
 		"size": 24,
 		"color": [ 249, 249, 249 ]
 	},
@@ -14,8 +14,9 @@
 		"ticksPerSecond": 60,
 		"startPaused": true
 	},
-	"load": {
-		"speciesFolder": "assets/species",
-		"biomesFolder": "assets/biomes"
+	"paths": {
+		"assets": "resources/assets/assets.json",
+		"species": "resources/data/species",
+		"biomes": "resources/data/biomes"
 	}
 }
