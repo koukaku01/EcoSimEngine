@@ -139,6 +139,7 @@
     <ClInclude Include="include\Components.hpp" />
     <ClInclude Include="include\Entity.hpp" />
     <ClInclude Include="include\EntityManager.hpp" />
+    <ClInclude Include="include\nlohmann\json.hpp" />
     <ClInclude Include="include\Scene.hpp" />
     <ClInclude Include="include\Scene_Menu.hpp" />
     <ClInclude Include="include\SimulationEngine.hpp" />
@@ -150,9 +151,16 @@
   <ItemGroup>
     <Font Include="assets\fonts\Roboto\Roboto-Italic-VariableFont_wdth,wght.ttf" />
     <Font Include="assets\fonts\Roboto\Roboto-VariableFont_wdth,wght.ttf" />
+    <Font Include="resources\assets\fonts\Roboto\Roboto-VariableFont_wdth,wght.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+    <None Include="resources\assets\assets.json" />
+    <None Include="resources\assets\sounds\foo_themeSong.ogg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\assets\textures\foo_rock1.png" />
+    <Image Include="resources\assets\textures\foo_stair.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -11,30 +11,34 @@
 Assets::Assets() = default;
 Assets::~Assets() = default;
 
-using json = nlohmann::json;
-namespace fs = std::filesystem;
+void Assets::loadFromFile(const std::string& path) {
+    std::ifstream ifs(path);
+    if (!ifs) {
+        throw std::runtime_error("Could not open file: " + path);
+    }
 
-void Assets::loadFromFile(const json& j) {
+    nlohmann::json j;
+    ifs >> j;
+
+    
     // -- Textures --
     if (j.contains("textures") && j["textures"].is_object()) {
-        for (auto& it : j["textures"].items()) {
-            const std::string name = it.key();
-            const std::string texPath = it.value().get<std::string>();
-            addTexture(name, texPath);      
+        for (const auto& [name, texPath] : j["textures"].items()) {
+            addTexture(name, texPath.get<std::string>());
         }
     }
 
     // -- Fonts --
     if (j.contains("fonts") && j["fonts"].is_object()) {
-        for (auto& it : j["fonts"].items()) {
-            addFont(it.key(), it.value().get<std::string>());
+        for (const auto& [name, fontPath] : j["fonts"].items()) {
+            addFont(name, fontPath.get<std::string>());
         }
     }
 
     // -- Sounds --
     if (j.contains("sounds") && j["sounds"].is_object()) {
-        for (auto& it : j["sounds"].items()) {
-            addSound(it.key(), it.value().get<std::string>());
+        for (const auto& [name, soundPath] : j["sounds"].items()) {
+            addSound(name, soundPath.get<std::string>());
         }
     }
 }
@@ -44,8 +48,7 @@ void Assets::loadFromFile(const json& j) {
 void Assets::addTexture(const std::string& name, const std::string& path) {
     sf::Texture texture;
     if (!texture.loadFromFile(path)) {
-        std::cerr << "Could not load image: " << path << "!\n";
-        exit(-1);
+        throw std::runtime_error("Could not load texture: " + path);
     }
     m_textureMap[name] = texture;
 }
@@ -53,8 +56,7 @@ void Assets::addTexture(const std::string& name, const std::string& path) {
 void Assets::addFont(const std::string& name, const std::string& path) {
     sf::Font font;
     if (!font.openFromFile(path)) {
-        std::cerr << "Could not load font: " << path << "\n";
-        exit(-1);
+        throw std::runtime_error("Could not load font: " + path);
     }
     m_fontMap[name] = font;
 }
@@ -62,14 +64,13 @@ void Assets::addFont(const std::string& name, const std::string& path) {
 void Assets::addSound(const std::string& name, const std::string& path) {
     sf::SoundBuffer sb;
     if (!sb.loadFromFile(path)) {
-        std::cerr << "Could not load sound: " << path << "\n";
-        exit(-1);
+        throw std::runtime_error("Could not load sound: " + path);
     }
     m_soundBuffers[name] = sb;
 
-    // create sf::Sound dynamically
-    auto sound = std::make_unique<sf::Sound>(m_soundBuffers.at(name));
-    m_sounds[name] = std::move(sound);
+    // SFML 3.0.0
+    // Create sf::Sound dynamically and store as unique_ptr
+    m_soundMap[name] = std::make_unique<sf::Sound>(m_soundBuffers.at(name));
 }
 
 
@@ -86,9 +87,10 @@ const sf::Font& Assets::getFont(const std::string& name) const {
 }
 
 sf::Sound& Assets::getSound(const std::string& name) {
-    assert(m_sounds.find(name) != m_sounds.end());
-    return *(m_sounds.at(name));
+    assert(m_soundMap.find(name) != m_soundMap.end());
+    return *(m_soundMap.at(name));
 }
+
 
 // getters for maps
 
@@ -97,5 +99,5 @@ const std::map<std::string, sf::Texture>& Assets::getTextureMap() const {
 }
 
 std::map<std::string, std::unique_ptr<sf::Sound>>& Assets::getSoundMap() {
-    return m_sounds;
+    return m_soundMap;
 }
