@@ -7,25 +7,27 @@
 
 class EntityManager;
 
-typedef std::tuple<
+using ComponentTuple = std::tuple<
 	CTransform,
 	CSpecies,
 	CHealth,
-	CReproductive
-> ComponentTuple;
+	CEnergy,
+	CReproductive,
+	CBehavior
+>;
 
 class Entity {
     friend class EntityManager;
 
-    bool m_active = true;
-    const size_t m_id = 0;
-    const std::string m_tag = "default";
+    bool m_active{ true };
+    const size_t m_id{ 0 };
+    const std::string m_tag{ "default" };
     ComponentTuple m_components;
 
     // constructor is private, so we can never create entities
     // outside the EntityManager which had friend access
     Entity(size_t id, std::string tag)
-		: m_id(id), m_tag(std::move(tag)){
+        : m_id{ id }, m_tag{ std::move(tag) } {
 	}
 
 public:
@@ -34,23 +36,23 @@ public:
         m_active = false;
     }
 
-    [[nodiscard]] size_t id() const
+    [[nodiscard]] size_t id() const noexcept
     {
 		return m_id;
     }
 
-    [[nodiscard]] bool isActive() const
+    [[nodiscard]] bool isActive() const noexcept
     {
 		return m_active;
     }
 
-    [[nodiscard]] const std::string& tag() const
+    [[nodiscard]] const std::string& tag() const noexcept
     {
 		return m_tag;
     }
 
     template<class T>
-    bool has() const {
+    bool has() const noexcept {
         return get<T>().has;
     }
 
@@ -74,6 +76,8 @@ public:
 
     template<class T>
     void remove() {
-        get<T>() = T();
+        auto& comp = get<T>();
+        comp = T();        // reset to default
+        comp.has = false;  // explicitly mark as removed
     }
 };
