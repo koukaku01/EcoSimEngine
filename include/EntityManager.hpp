@@ -69,7 +69,9 @@ public:
     }
 
     std::shared_ptr<Entity> addEntity(const std::string& tag) {
-        auto entity = std::make_shared<Entity>(m_totalEntities++, tag);
+        // Must use 'new' here instead of std::make_shared because Entity's constructor is private.
+        // std::make_shared constructs outside EntityManager, so it cannot access private constructors despite friendship.
+        std::shared_ptr<Entity> entity(new Entity(m_totalEntities++, tag));
         m_entitiesToAdd.push_back(entity);
         return entity;
     }
