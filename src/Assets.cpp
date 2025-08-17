@@ -87,8 +87,22 @@ const sf::Font& Assets::getFont(const std::string& name) const {
 }
 
 sf::Sound& Assets::getSound(const std::string& name) {
-    assert(m_soundMap.find(name) != m_soundMap.end());
-    return *(m_soundMap.at(name));
+    auto it = m_soundMap.find(name);
+    if (it != m_soundMap.end()) {
+        return *(it->second); // return the stored unique_ptr as reference
+    }
+
+    // If not found, create it using the buffer
+    auto bufferIt = m_soundBuffers.find(name);
+    if (bufferIt == m_soundBuffers.end()) {
+        throw std::runtime_error("SoundBuffer not loaded: " + name);
+    }
+
+    // Create sf::Sound with buffer
+    std::unique_ptr<sf::Sound> sound = std::make_unique<sf::Sound>(bufferIt->second);
+    sf::Sound& ref = *sound;
+    m_soundMap[name] = std::move(sound); // store in map
+    return ref;
 }
 
 
