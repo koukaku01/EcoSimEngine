@@ -113,15 +113,13 @@ void SimulationEngine::sUserInput() {
 
 
         if (auto keyEvent = event.getIf<sf::Event::KeyPressed>()) {
-            int keyInt = static_cast<int>(keyEvent->code);
-            auto it = currentScene()->getActionMap().find(static_cast<sf::Keyboard::Key>(keyInt));
+            auto it = currentScene()->getActionMap().find(keyEvent->code);
             if (it != currentScene()->getActionMap().end()) {
                 currentScene()->doAction(Action(it->second, "START"));
             }
         }
         else if (auto keyEvent = event.getIf<sf::Event::KeyReleased>()) {
-            int keyInt = static_cast<int>(keyEvent->code);
-            auto it = currentScene()->getActionMap().find(static_cast<sf::Keyboard::Key>(keyInt));
+            auto it = currentScene()->getActionMap().find(keyEvent->code);
             if (it != currentScene()->getActionMap().end()) {
                 currentScene()->doAction(Action(it->second, "END"));
             }
