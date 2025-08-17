@@ -11,16 +11,16 @@
 // Forward declaration to break circular include
 class SimulationEngine;
 
-typedef std::map<int, std::string> ActionMap;
+using ActionMap = std::map<int, std::string>;
 
 class Scene {
 protected:
-    SimulationEngine* m_simulation = nullptr;
+    SimulationEngine* m_simulation{ nullptr };
     EntityManager m_entityManager;
     ActionMap m_actionMap;
-    bool m_paused = false;
-    bool m_hasEnded = false;
-    size_t m_currentFrame = 0;
+    bool m_paused{ false };
+    bool m_hasEnded{ false };
+    size_t m_currentFrame{ 0 };
 
     virtual void onEnd() = 0;
 
