@@ -11,7 +11,7 @@
 // Forward declaration to break circular include
 class SimulationEngine;
 
-using ActionMap = std::map<sf::Keyboard::Key, std::string>;
+using ActionMap = std::map<sf::Keyboard::Key, ActionName>;
 
 class Scene {
 protected:
@@ -37,7 +37,7 @@ public:
     virtual void doAction(const Action& action);
 
     void simulate(size_t frames);
-    void registerAction(sf::Keyboard::Key inputKey, const std::string& actionName);
+    void registerAction(sf::Keyboard::Key inputKey, const ActionName actionName);
 
     [[nodiscard]] float width() const;
     [[nodiscard]] float height() const;

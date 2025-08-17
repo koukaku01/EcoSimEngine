@@ -22,10 +22,10 @@ void Scene_Menu::init() {
     m_simulation->window().setView(view);
 
 	// Register actions for the menu
-    registerAction(sf::Keyboard::Key::W, "UP");
-    registerAction(sf::Keyboard::Key::S, "DOWN");
-    registerAction(sf::Keyboard::Key::Enter, "SELECT");
-    registerAction(sf::Keyboard::Key::Escape, "BACK");
+    registerAction(sf::Keyboard::Key::W, ActionName::UP);
+    registerAction(sf::Keyboard::Key::S, ActionName::DOWN);
+    registerAction(sf::Keyboard::Key::Enter, ActionName::SELECT);
+    registerAction(sf::Keyboard::Key::Escape, ActionName::BACK);
 
     // Load sound
     sf::Sound& m_titleMusic = m_simulation->assets().getSound("Foo");
@@ -66,20 +66,20 @@ void Scene_Menu::init() {
 
 
 void Scene_Menu::sDoAction(const Action& action) {
-    if (action.type() != "START") return; // <-- ignore auto-repeat and END events
+    if (action.type() != ActionType::START) return; // <-- ignore auto-repeat and END events
 
     if (m_menuState == MenuState::Main)
     {
-        if (action.name() == "UP") {
+        if (action.name() == ActionName::UP) {
             if (m_selectedMainIndex == 0)
                 m_selectedMainIndex = m_mainItems.size() - 1;
             else
                 --m_selectedMainIndex;
         }
-        if (action.name() == "DOWN") {
+        if (action.name() == ActionName::DOWN) {
             m_selectedMainIndex = (m_selectedMainIndex + 1) % m_mainItems.size();
         }
-        if (action.name() == "SELECT") {
+        if (action.name() == ActionName::SELECT) {
             if (m_selectedMainIndex == 1) { // Load -> switch to sub-menu
                 m_menuState = MenuState::SubMenu;
                 m_selectedSubIndex = 0;
@@ -96,19 +96,19 @@ void Scene_Menu::sDoAction(const Action& action) {
 
     }
     else if (m_menuState == MenuState::SubMenu) {
-        if (action.name() == "UP") {
+        if (action.name() == ActionName::UP) {
             if (m_selectedSubIndex == 0)
                 m_selectedSubIndex = m_subItems.size() - 1;
             else
                 --m_selectedSubIndex;
         }
-        if (action.name() == "DOWN") {
+        if (action.name() == ActionName::DOWN) {
             m_selectedSubIndex = (m_selectedSubIndex + 1) % m_subItems.size();
         }
-        if (action.name() == "BACK") {
+        if (action.name() == ActionName::BACK) {
             m_menuState = MenuState::Main;
         }
-        else if (action.name() == "SELECT") {
+        else if (action.name() == ActionName::SELECT) {
             // TODO: Handle Sub-menu selection
             // something like
             //      //   m_game->changeScene("PLAY", std::make_shared<Scene_Simulation>(m_game, __SIMULATION_FILE_HERE__));

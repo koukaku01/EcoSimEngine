@@ -115,13 +115,13 @@ void SimulationEngine::sUserInput() {
         if (auto keyEvent = event.getIf<sf::Event::KeyPressed>()) {
             auto it = currentScene()->getActionMap().find(keyEvent->code);
             if (it != currentScene()->getActionMap().end()) {
-                currentScene()->doAction(Action(it->second, "START"));
+                currentScene()->doAction(Action(it->second, ActionType::START));
             }
         }
         else if (auto keyEvent = event.getIf<sf::Event::KeyReleased>()) {
             auto it = currentScene()->getActionMap().find(keyEvent->code);
             if (it != currentScene()->getActionMap().end()) {
-                currentScene()->doAction(Action(it->second, "END"));
+                currentScene()->doAction(Action(it->second, ActionType::END));
             }
         }
 
@@ -136,13 +136,13 @@ void SimulationEngine::sUserInput() {
         if (auto mb = event.getIf<sf::Event::MouseButtonPressed>()) {
             switch (mb->button) {
             case sf::Mouse::Button::Left:
-                currentScene()->doAction(Action("LEFT_CLICK", "START", pos));
+                currentScene()->doAction(Action(ActionName::LEFT_CLICK, ActionType::START, pos));
                 break;
             case sf::Mouse::Button::Middle:
-                currentScene()->doAction(Action("MIDDLE_CLICK", "START", pos));
+                currentScene()->doAction(Action(ActionName::MIDDLE_CLICK, ActionType::START, pos));
                 break;
             case sf::Mouse::Button::Right:
-                currentScene()->doAction(Action("RIGHT_CLICK", "START", pos));
+                currentScene()->doAction(Action(ActionName::RIGHT_CLICK, ActionType::START, pos));
                 break;
             default:
                 break;
@@ -152,13 +152,13 @@ void SimulationEngine::sUserInput() {
         if (auto mb = event.getIf<sf::Event::MouseButtonReleased>()) {
             switch (mb->button) {
             case sf::Mouse::Button::Left:
-                currentScene()->doAction(Action("LEFT_CLICK", "END", pos));
+                currentScene()->doAction(Action(ActionName::LEFT_CLICK, ActionType::END, pos));
                 break;
             case sf::Mouse::Button::Middle:
-                currentScene()->doAction(Action("MIDDLE_CLICK", "END", pos));
+                currentScene()->doAction(Action(ActionName::MIDDLE_CLICK, ActionType::END, pos));
                 break;
             case sf::Mouse::Button::Right:
-                currentScene()->doAction(Action("RIGHT_CLICK", "END", pos));
+                currentScene()->doAction(Action(ActionName::RIGHT_CLICK, ActionType::END, pos));
                 break;
             default:
                 break;
@@ -167,7 +167,7 @@ void SimulationEngine::sUserInput() {
 
         // --- Mouse Move ---
         if (auto mm = event.getIf<sf::Event::MouseMoved>()) {
-            currentScene()->doAction(Action("MOUSE_MOVE", Vec2f(static_cast<float>(mm->position.x), static_cast<float>(mm->position.y))));
+            currentScene()->doAction(Action(ActionName::MOUSE_MOVE, Vec2f(static_cast<float>(mm->position.x), static_cast<float>(mm->position.y))));
         }
     }
 }
