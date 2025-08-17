@@ -24,7 +24,7 @@ void Scene::simulate(size_t frames) {
     // Default empty implementation
 }
 
-void Scene::registerAction(int inputKey, const std::string& actionName) {
+void Scene::registerAction(sf::Keyboard::Key inputKey, const std::string& actionName) {
     m_actionMap[inputKey] = actionName;
 }
 
