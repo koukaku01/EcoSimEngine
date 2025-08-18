@@ -64,7 +64,7 @@ void SimulationEngine::init(const std::string& path) {
 }
 
 std::shared_ptr<Scene> SimulationEngine::currentScene() {
-    return m_sceneMap[m_currentScene];
+    return m_sceneManager.getCurrentScene();
 }
 
 bool SimulationEngine::isRunning() const{
@@ -173,8 +173,7 @@ void SimulationEngine::sUserInput() {
 }
 
 void SimulationEngine::changeScene(const std::string& sceneName, std::shared_ptr<Scene> scene, bool endCurrentScene) {
-    m_currentScene = sceneName;
-    m_sceneMap[sceneName] = std::move(scene);
+    m_sceneManager.changeScene(sceneName, std::move(scene), endCurrentScene);
 }
 
 void SimulationEngine::quit() {
