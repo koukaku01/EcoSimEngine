@@ -67,7 +67,7 @@ std::shared_ptr<Scene> SimulationEngine::currentScene() {
     return m_sceneMap[m_currentScene];
 }
 
-bool SimulationEngine::isRunning() {
+bool SimulationEngine::isRunning() const{
     return m_running && m_window.isOpen();
 }
 
