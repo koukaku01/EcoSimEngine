@@ -14,7 +14,7 @@ struct WindowConfig {
     bool vsync;
 };
 
-typedef std::map<std::string, std::shared_ptr<Scene>> SceneMap;
+using SceneMap = std::map<std::string, std::shared_ptr<Scene>>;
 
 class SimulationEngine {
 protected:
@@ -24,8 +24,8 @@ protected:
     Assets m_assets;
     std::string m_currentScene;
     SceneMap m_sceneMap;
-    size_t m_simulationSpeed = 1;
-    bool m_running = true;
+    size_t m_simulationSpeed{ 1 };
+    bool m_running{ true };
 
     void init(const std::string& path);
 
@@ -52,5 +52,5 @@ public:
 
     Assets& assets();
 
-    bool isRunning();
+    bool isRunning() const;
 };
