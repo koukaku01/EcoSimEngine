@@ -24,8 +24,6 @@ protected:
     sf::Clock m_deltaClock; // for imgui
     Assets m_assets;
 	SceneManager m_sceneManager;
-    //REMOVE: std::string m_currentScene;
-    //REMOVE SceneMap m_sceneMap;
     size_t m_simulationSpeed{ 1 };
     bool m_running{ true };
 
@@ -39,8 +37,6 @@ protected:
 
 public:
     explicit SimulationEngine(const std::string& path);
-
-    void changeScene(const std::string& sceneName, std::shared_ptr<Scene> scene, bool endCurrentScene = false);
 
     void quit();
 
