@@ -60,11 +60,11 @@ void SimulationEngine::init(const std::string& path) {
     */
 
     // --- Set initial scene ---
-    changeScene("MENU", std::make_shared<Scene_Menu>(this));
+    m_sceneManager.changeScene(SceneID::Menu, std::make_shared<Scene_Menu>(this));
 }
 
 std::shared_ptr<Scene> SimulationEngine::currentScene() {
-    return m_sceneMap[m_currentScene];
+    return m_sceneManager.getCurrentScene();
 }
 
 bool SimulationEngine::isRunning() const{
@@ -170,11 +170,6 @@ void SimulationEngine::sUserInput() {
             currentScene()->doAction(Action(ActionName::MOUSE_MOVE, Vec2f(static_cast<float>(mm->position.x), static_cast<float>(mm->position.y))));
         }
     }
-}
-
-void SimulationEngine::changeScene(const std::string& sceneName, std::shared_ptr<Scene> scene, bool endCurrentScene) {
-    m_currentScene = sceneName;
-    m_sceneMap[sceneName] = std::move(scene);
 }
 
 void SimulationEngine::quit() {

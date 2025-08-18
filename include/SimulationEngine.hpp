@@ -6,6 +6,7 @@
 
 #include "Scene.hpp"
 #include "Assets.hpp"
+#include "SceneManager.hpp"
 
 struct WindowConfig {
     unsigned int width;
@@ -14,7 +15,7 @@ struct WindowConfig {
     bool vsync;
 };
 
-using SceneMap = std::map<std::string, std::shared_ptr<Scene>>;
+//using SceneMap = std::map<std::string, std::shared_ptr<Scene>>;
 
 class SimulationEngine {
 protected:
@@ -22,8 +23,7 @@ protected:
     sf::RenderWindow m_window;
     sf::Clock m_deltaClock; // for imgui
     Assets m_assets;
-    std::string m_currentScene;
-    SceneMap m_sceneMap;
+	SceneManager m_sceneManager;
     size_t m_simulationSpeed{ 1 };
     bool m_running{ true };
 
@@ -37,8 +37,6 @@ protected:
 
 public:
     explicit SimulationEngine(const std::string& path);
-
-    void changeScene(const std::string& sceneName, std::shared_ptr<Scene> scene, bool endCurrentScene = false);
 
     void quit();
 
