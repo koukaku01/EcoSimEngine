@@ -12,10 +12,16 @@ enum class ActionName {
     RIGHT,
     SELECT,
     BACK,
+	PAUSE, // pause the game
+    QUIT_AND_SAVE,
 	LEFT_CLICK,
 	MIDDLE_CLICK,
 	RIGHT_CLICK,
 	MOUSE_MOVE,
+	TOGGLE_FOLLOW, // toggle camera follow
+	TOGGLE_TEXTURE, // toggle drawing textures
+	TOGGLE_COLLISION, // toggle drawing collision boxes
+	TOGGLE_GRID, // toggle drawing grid
     NONE
 };
 

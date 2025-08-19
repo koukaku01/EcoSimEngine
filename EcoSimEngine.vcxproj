@@ -131,6 +131,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Scene_Menu.cpp" />
+    <ClCompile Include="src\Scene_Simulation.cpp" />
     <ClCompile Include="src\SimulationEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,7 +142,9 @@
     <ClInclude Include="include\EntityManager.hpp" />
     <ClInclude Include="include\nlohmann\json.hpp" />
     <ClInclude Include="include\Scene.hpp" />
+    <ClInclude Include="include\SceneManager.hpp" />
     <ClInclude Include="include\Scene_Menu.hpp" />
+    <ClInclude Include="include\Scene_Simulation.hpp" />
     <ClInclude Include="include\SimulationEngine.hpp" />
     <ClInclude Include="include\Vec2.hpp" />
   </ItemGroup>
