@@ -184,3 +184,5 @@ void SimulationEngine::update() {
 Assets& SimulationEngine::assets() {
     return m_assets;
 }
+
+SceneManager& SimulationEngine::sceneManager() { return m_sceneManager; }

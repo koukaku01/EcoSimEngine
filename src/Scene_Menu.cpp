@@ -3,6 +3,7 @@
 #include "Vec2.hpp"
 #include "Assets.hpp"
 #include "Action.hpp"
+#include "Scene_Simulation.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 
@@ -26,6 +27,10 @@ void Scene_Menu::init() {
     registerAction(sf::Keyboard::Key::S, ActionName::DOWN);
     registerAction(sf::Keyboard::Key::Enter, ActionName::SELECT);
     registerAction(sf::Keyboard::Key::Escape, ActionName::BACK);
+
+    registerAction(sf::Keyboard::Key::Up, ActionName::UP);
+    registerAction(sf::Keyboard::Key::Down, ActionName::DOWN);
+
 
     // Load sound
     sf::Sound& m_titleMusic = m_simulation->assets().getSound("Foo");
@@ -109,17 +114,20 @@ void Scene_Menu::sDoAction(const Action& action) {
             m_menuState = MenuState::Main;
         }
         else if (action.name() == ActionName::SELECT) {
-            // TODO: Handle Sub-menu selection
-            // something like
-            //      //   m_game->changeScene("PLAY", std::make_shared<Scene_Simulation>(m_game, __SIMULATION_FILE_HERE__));
+            // Handle Sub-menu selection
 
+            std::string simKey = m_subItems[m_selectedSubIndex]; // "Simulation1", etc
+
+            m_simulation->sceneManager().changeSimulationScene(
+                simKey,
+                std::make_shared<Scene_Simulation>(m_simulation, simKey)
+            );
         }
 
         for (size_t i = 0; i < m_subTexts.size(); ++i)
             m_subTexts[i].setFillColor(i == m_selectedSubIndex ? sf::Color::Yellow : sf::Color::White);
     }
 }
-
 
 
 void Scene_Menu::sRender() {

@@ -22,7 +22,7 @@ protected:
     std::string m_title{ "Main Menu" };
 
     std::vector<std::string> m_mainItems{ "New", "Load", "Options", "Quit" };
-    std::vector<std::string> m_subItems{ "Simulation1", "Simulation2", "Simulation3" };
+    std::vector<std::string> m_subItems{ "Simulation1", "Simulation2", "Simulation3" }; //TODO: change logic later
 
     std::vector<sf::Text> m_mainTexts;
     std::vector<sf::Text> m_subTexts;
