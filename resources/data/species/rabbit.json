@@ -1,0 +1,38 @@
+{
+    "name": "Rabbit",
+    "scientificName": "Oryctolagus cuniculus",
+    "type": "mammal",
+    "diet": "herbivore",
+    "lifespanYears": 2,
+    "maxAgeYears": 5,
+    "weightKg": {
+        "min": 1.0,
+        "max": 2.5
+    },
+    "speedKmh": 40,
+    "reproduction": {
+        "gestationDays": 30,
+        "litterSize": {
+            "min": 3,
+            "max": 8
+        },
+        "breedingSeason": "spring-summer"
+    },
+    "habitat": [
+        "grassland",
+        "forest",
+        "farmland"
+    ],
+    "predators": [
+        "fox",
+        "eagle",
+        "wolf",
+        "human"
+    ],
+    "prey": [
+        "grass",
+        "herbs",
+        "leaves",
+        "bark"
+    ]
+}

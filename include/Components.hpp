@@ -8,7 +8,7 @@ enum class BehaviorState { Idle, Wander, SeekFood, Flee, Reproduce };
 class Component
 {
 public:
-    bool exists{ false };
+	bool has{ false }; // i.e. this componenet exists in the entity
 };
 
 class CTransform : public Component
@@ -59,6 +59,7 @@ public:
     float consumptionRate{ 1.0f }; // per second or tick
 
     CEnergy() = default;
+    explicit CEnergy(float m) : current(m), max(m) {}
 };
 
 

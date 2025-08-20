@@ -7,6 +7,7 @@
 
 class Scene_Simulation : public Scene {
     std::string m_simKey;
+	std::string m_defaultSimulationPath{ "Simulations/default_simulation.json" };
 protected:
     bool m_drawTextures = true;
     bool m_drawCollision = false;
@@ -19,6 +20,8 @@ protected:
     Vec2f m_mousePos;
 
     void init(std::string& simulationKey);
+	void loadSimulation(std::string& simulationKey);
+    void loadDefaultSimulation(std::string & defaultSimulationPath);
 
     void onEnd() override;
 
