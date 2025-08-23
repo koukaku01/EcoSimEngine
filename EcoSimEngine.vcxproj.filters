@@ -81,6 +81,9 @@
     <None Include="README.md" />
     <None Include="resources\assets\assets.json" />
     <None Include="resources\assets\sounds\foo_themeSong.ogg" />
+    <None Include="Simulations\default_simulation.json" />
+    <None Include="resources\data\species\rabbit.json" />
+    <None Include="resources\data\species\fox.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config\config.json" />

@@ -1,0 +1,24 @@
+{
+    "simulation": {
+        "initialPopulation": {
+            "fox": {
+                "total": 10,
+                "male": 5,
+                "female": 5
+            },
+            "rabbit": {
+                "total": 50,
+                "male": 25,
+                "female": 25
+            }
+        },
+        "world": {
+            "size": {
+                "width": 1000,
+                "height": 1000
+            },
+            "timeStep": 1.0,
+            "maxTicks": 100000
+        }
+    }
+}

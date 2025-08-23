@@ -2,10 +2,14 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <random>
+
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
+
+#include "nlohmann/json.hpp"
 
 // #include "imgui.h"
 // #include "imgui-SFML.h"
@@ -15,6 +19,7 @@
 #include "Scene_Menu.hpp"
 #include "Scene_Simulation.hpp"
 #include "Vec2.hpp"
+#include "Utils.hpp"
 
 
 Scene_Simulation::Scene_Simulation(SimulationEngine* simulation, std::string& simKey)
@@ -23,6 +28,8 @@ Scene_Simulation::Scene_Simulation(SimulationEngine* simulation, std::string& si
 }
 
 void Scene_Simulation::init(std::string& simulationKey) {
+	loadSimulation(simulationKey);
+
     // MAYDELETE
    // m_gridText.setCharacterSize(12);
    // m_gridText.setFont(m_simulation->assets().getFont("Main"));
@@ -39,6 +46,107 @@ void Scene_Simulation::init(std::string& simulationKey) {
     registerAction(sf::Keyboard::Key::S, ActionName::DOWN);
     registerAction(sf::Keyboard::Key::A, ActionName::LEFT);
     registerAction(sf::Keyboard::Key::D, ActionName::RIGHT);
+}
+
+void Scene_Simulation::loadSimulation(std::string& simulationKey) {
+    // reset the entity manager every time we load a level
+    m_entityManager = EntityManager();
+	// Load the simulation data from a file or database
+	// For now, we will just print the simulation key
+	std::cout << "Loading simulation with key: " << simulationKey << std::endl;
+	// Here you would typically load entities, components, and other simulation data
+	// For example:
+	// m_entityManager.loadEntitiesFromFile(simulationKey + ".entities");
+	// m_componentManager.loadComponentsFromFile(simulationKey + ".components");
+
+    // Load default simulation
+	loadDefaultSimulation(m_defaultSimulationPath);
+}
+
+void Scene_Simulation::loadDefaultSimulation(std::string& defaultSimulationPath) {
+	// Load default entities and components for the simulation from default JSON
+    
+    // reset the entity manager every time we load a level
+    m_entityManager = EntityManager();
+
+	std::cout << "Loading default simulation from: " << defaultSimulationPath << std::endl;
+
+	std::ifstream file(defaultSimulationPath);
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open default simulation file: " << defaultSimulationPath << std::endl;
+        return;
+    }
+
+	nlohmann::json sim;
+	file >> sim;
+
+    // read population counts
+    auto populations = sim["simulation"]["initialPopulation"];
+
+    // --- set up RNG once per load ---
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> distX(
+        0, sim["simulation"]["world"]["size"]["width"].get<int>());
+    std::uniform_real_distribution<float> distY(
+        0, sim["simulation"]["world"]["size"]["height"].get<int>());
+
+    int speciesCount = populations.size();
+    int i = 0;
+
+    for (auto& [speciesName, popData] : populations.items()) {
+        float hue = (i * 360.0f) / speciesCount;  // evenly spaced hues
+        m_speciesColors[speciesName] = hslToRgb(hue, 0.7f, 0.5f); // 70% sat, 50% lightness
+        i++;
+    }
+
+
+    for (auto& [speciesName, popData] : populations.items()) {
+        int total = popData["total"];
+		int males = popData["male"];
+		int females = popData["female"];
+
+        float hue = (i * 360.0f) / speciesCount;  // evenly spaced hues
+        m_speciesColors[speciesName] = hslToRgb(hue, 0.7f, 0.5f); // 70% sat, 50% lightness
+        i++;
+
+	    // load species data JSON (per-species data)
+	    std::string speciesFile = "resources/data/species/" + speciesName + ".json";
+	    std::ifstream sf(speciesFile);
+        if (!sf.is_open()) {
+            std::cerr << "Could not open species file: " << speciesFile << "\n";
+            continue;
+        }
+        nlohmann::json speciesJson;
+	    sf >> speciesJson;
+
+        // create entities
+        for (int i = 0; i < total; i++) {
+            auto entity = m_entityManager.addEntity(speciesName);
+
+            // --- add Compoennts ---
+			entity->add<CSpecies>(speciesName, 0); // default age is 0
+            entity->add<CHealth>(100.0f);
+            entity->add<CEnergy>(100.0f);
+
+            // proper random position
+            float x = distX(gen);
+            float y = distY(gen);
+            entity->add<CTransform>(Vec2f(x, y));
+
+            // reproductive component
+			auto& repro = entity->add<CReproductive>();
+            repro.sex = (i < males ? Sex::Male : Sex::Female);
+            repro.canReproduce = true;
+
+            // TODO
+            // default AI 
+            entity->add<CBehavior>();
+        }
+        std::cout << "Loaded " << total << " " << speciesName << " entities.\n";
+    }
+
+    	
 }
 
 void Scene_Simulation::sDoAction(const Action& action) {
@@ -78,12 +186,37 @@ void Scene_Simulation::onEnd() {
     // not "this". Scenes should always receive the engine that owns them so they
     // can access window, assets, input, etc. Passing "this" (the current scene)
     // would be wrong because Scene_Menu is not constructed from another scene.
-    m_simulation->sceneManager().changeScene(SceneID::Menu, std::make_shared<Scene_Menu>(m_simulation));
+    m_simulation->sceneManager()
+        .changeScene(SceneID::Menu, std::make_shared<Scene_Menu>(m_simulation));
 }
 
 
 void Scene_Simulation::sRender() {
-    m_simulation->window().clear(sf::Color(255, 192, 122));
-    sf::RectangleShape tick({ 1.0f, 6.0f });
-    tick.setFillColor(sf::Color::Black);
+    sf::RenderWindow& win = m_simulation->window();
+    win.clear(sf::Color(15, 15, 20));
+
+    for (const auto& entity : m_entityManager.getEntities()) {
+        if (!entity->isActive()) continue;
+
+        if (entity->has<CTransform>()) {
+            const auto& transform = entity->get<CTransform>();
+
+            const auto& species = entity->get<CSpecies>();
+
+            sf::CircleShape circle(5.0f);
+            circle.setOrigin({ circle.getRadius(), circle.getRadius() });
+            circle.setPosition(transform.pos);
+
+            // lookup species color
+            auto it = m_speciesColors.find(species.speciesName);
+            if (it != m_speciesColors.end()) {
+                circle.setFillColor(it->second);
+            }
+            else {
+                circle.setFillColor(sf::Color::White); // fallback
+            }
+
+            win.draw(circle);
+        }
+    }
 }
