@@ -19,6 +19,7 @@
 #include "Scene_Menu.hpp"
 #include "Scene_Simulation.hpp"
 #include "Vec2.hpp"
+#include "Utils.hpp"
 
 
 Scene_Simulation::Scene_Simulation(SimulationEngine* simulation, std::string& simKey)
@@ -90,10 +91,24 @@ void Scene_Simulation::loadDefaultSimulation(std::string& defaultSimulationPath)
     std::uniform_real_distribution<float> distY(
         0, sim["simulation"]["world"]["size"]["height"].get<int>());
 
+    int speciesCount = populations.size();
+    int i = 0;
+
+    for (auto& [speciesName, popData] : populations.items()) {
+        float hue = (i * 360.0f) / speciesCount;  // evenly spaced hues
+        m_speciesColors[speciesName] = hslToRgb(hue, 0.7f, 0.5f); // 70% sat, 50% lightness
+        i++;
+    }
+
+
     for (auto& [speciesName, popData] : populations.items()) {
         int total = popData["total"];
 		int males = popData["male"];
 		int females = popData["female"];
+
+        float hue = (i * 360.0f) / speciesCount;  // evenly spaced hues
+        m_speciesColors[speciesName] = hslToRgb(hue, 0.7f, 0.5f); // 70% sat, 50% lightness
+        i++;
 
 	    // load species data JSON (per-species data)
 	    std::string speciesFile = "resources/data/species/" + speciesName + ".json";
@@ -185,10 +200,21 @@ void Scene_Simulation::sRender() {
 
         if (entity->has<CTransform>()) {
             const auto& transform = entity->get<CTransform>();
+
+            const auto& species = entity->get<CSpecies>();
+
             sf::CircleShape circle(5.0f);
-            circle.setFillColor(sf::Color::White);
-            circle.setOrigin({ circle.getRadius(), circle.getRadius() }); // center on pos
+            circle.setOrigin({ circle.getRadius(), circle.getRadius() });
             circle.setPosition(transform.pos);
+
+            // lookup species color
+            auto it = m_speciesColors.find(species.speciesName);
+            if (it != m_speciesColors.end()) {
+                circle.setFillColor(it->second);
+            }
+            else {
+                circle.setFillColor(sf::Color::White); // fallback
+            }
 
             win.draw(circle);
         }

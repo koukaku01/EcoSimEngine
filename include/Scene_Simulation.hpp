@@ -8,6 +8,9 @@
 class Scene_Simulation : public Scene {
     std::string m_simKey;
 	std::string m_defaultSimulationPath{ "Simulations/default_simulation.json" };
+
+    std::unordered_map<std::string, sf::Color> m_speciesColors;
+
 protected:
     bool m_drawTextures = true;
     bool m_drawCollision = false;

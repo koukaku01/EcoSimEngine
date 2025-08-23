@@ -146,6 +146,7 @@
     <ClInclude Include="include\Scene_Menu.hpp" />
     <ClInclude Include="include\Scene_Simulation.hpp" />
     <ClInclude Include="include\SimulationEngine.hpp" />
+    <ClInclude Include="include\Utils.hpp" />
     <ClInclude Include="include\Vec2.hpp" />
   </ItemGroup>
   <ItemGroup>
