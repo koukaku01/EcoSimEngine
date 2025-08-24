@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "Entity.hpp"
+#include "EcoSimEngine/ecs/Entity.hpp"
 
 
 using EntityVec = std::vector<std::shared_ptr<Entity>>;

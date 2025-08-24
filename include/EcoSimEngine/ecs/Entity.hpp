@@ -3,7 +3,7 @@
 #include <string>
 #include <tuple>
 
-#include "Components.hpp"
+#include "EcoSimEngine/ecs/Components.hpp"
 
 class EntityManager;
 

@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics/Color.hpp>
 
+#include <SFML/System/Vector2.hpp>
+
 #include <cmath>
 
 
@@ -23,4 +25,13 @@ sf::Color hslToRgb(float h, float s, float l) {
         static_cast<std::uint8_t>((g + m) * 255),
         static_cast<std::uint8_t>((b + m) * 255)
     );
+}
+
+Vec2f randomUnitVector() {
+    float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * 3.1415926f;
+    return Vec2f(cos(angle), sin(angle));
+}
+
+float randomFloat(float min, float max) {
+    return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
 }

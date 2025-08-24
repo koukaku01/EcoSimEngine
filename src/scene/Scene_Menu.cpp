@@ -1,9 +1,9 @@
-#include "Scene_Menu.hpp"
-#include "SimulationEngine.hpp"
-#include "Vec2.hpp"
-#include "Assets.hpp"
-#include "Action.hpp"
-#include "Scene_Simulation.hpp"
+#include "EcoSimEngine/scene/Scene_Menu.hpp"
+#include "EcoSimEngine/SimulationEngine.hpp"
+#include "EcoSimEngine/math/Vec2.hpp"
+#include "EcoSimEngine/ecs/Assets.hpp"
+#include "EcoSimEngine/ecs/Action.hpp"
+#include "EcoSimEngine/scene/Scene_Simulation.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 

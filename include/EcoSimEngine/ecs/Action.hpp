@@ -3,7 +3,7 @@
 #include <string>
 #include <format>
 
-#include "Vec2.hpp"
+#include "EcoSimEngine/math/Vec2.hpp"
 
 enum class ActionName {
     UP,
@@ -25,6 +25,7 @@ enum class ActionName {
     NONE
 };
 
+
 enum class ActionType {
 	START,
 	END,
@@ -32,8 +33,8 @@ enum class ActionType {
 };
 
 class Action {
-    ActionName m_name;
-    ActionType m_type;
+    ActionName m_name{ ActionName::NONE };
+    ActionType m_type{ ActionType::NONE };
     Vec2f m_pos{}; // default to (0,0)
 
 public:
@@ -54,10 +55,12 @@ public:
         : Action{ name, ActionType::NONE, pos } {
     }
 
+    // Getters
     [[nodiscard]] const ActionName name() const  noexcept { return m_name; }
     [[nodiscard]] const ActionType type() const noexcept { return m_type; }
     [[nodiscard]] const Vec2f& pos() const noexcept { return m_pos; }
 
+    // Convert to string for debugging/logging
     [[nodiscard]] std::string toString() const noexcept {
         static constexpr const char* NameStrings[] = {
             "UP", "DOWN", "LEFT", "RIGHT", "SELECT", "BACK", "NONE", 

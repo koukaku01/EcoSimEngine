@@ -127,27 +127,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Assets.cpp" />
+    <ClCompile Include="src\ecs\Assets.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\Scene_Menu.cpp" />
-    <ClCompile Include="src\Scene_Simulation.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\scene\Scene_Menu.cpp" />
+    <ClCompile Include="src\scene\Scene_Simulation.cpp" />
     <ClCompile Include="src\SimulationEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Action.hpp" />
-    <ClInclude Include="include\Assets.hpp" />
-    <ClInclude Include="include\Components.hpp" />
-    <ClInclude Include="include\Entity.hpp" />
-    <ClInclude Include="include\EntityManager.hpp" />
-    <ClInclude Include="include\nlohmann\json.hpp" />
-    <ClInclude Include="include\Scene.hpp" />
-    <ClInclude Include="include\SceneManager.hpp" />
-    <ClInclude Include="include\Scene_Menu.hpp" />
-    <ClInclude Include="include\Scene_Simulation.hpp" />
-    <ClInclude Include="include\SimulationEngine.hpp" />
-    <ClInclude Include="include\Utils.hpp" />
-    <ClInclude Include="include\Vec2.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\Action.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\Assets.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\Components.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\Entity.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\EntityManager.hpp" />
+    <ClInclude Include="include\EcoSimEngine\external\nlohmann\json.hpp" />
+    <ClInclude Include="include\EcoSimEngine\scene\Scene.hpp" />
+    <ClInclude Include="include\EcoSimEngine\scene\SceneManager.hpp" />
+    <ClInclude Include="include\EcoSimEngine\scene\Scene_Menu.hpp" />
+    <ClInclude Include="include\EcoSimEngine\scene\Scene_Simulation.hpp" />
+    <ClInclude Include="include\EcoSimEngine\SimulationEngine.hpp" />
+    <ClInclude Include="include\EcoSimEngine\utils\SpatialHash.hpp" />
+    <ClInclude Include="include\EcoSimEngine\utils\Utils.hpp" />
+    <ClInclude Include="include\EcoSimEngine\math\Vec2.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config\config.json" />
@@ -161,9 +162,9 @@
     <None Include="README.md" />
     <None Include="resources\assets\assets.json" />
     <None Include="resources\assets\sounds\foo_themeSong.ogg" />
-    <None Include="resources\data\species\fox.json" />
-    <None Include="resources\data\species\rabbit.json" />
-    <None Include="Simulations\default_simulation.json" />
+    <None Include="resources\definitions\species\fox.json" />
+    <None Include="resources\definitions\species\rabbit.json" />
+    <None Include="resources\defaults\default_simulation.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\assets\textures\foo_rock1.png" />

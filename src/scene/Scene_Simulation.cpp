@@ -9,17 +9,18 @@
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
 
-#include "nlohmann/json.hpp"
+#include "EcoSimEngine/external/nlohmann/json.hpp"
 
 // #include "imgui.h"
 // #include "imgui-SFML.h"
 
-#include "Components.hpp"
-#include "SimulationEngine.hpp"
-#include "Scene_Menu.hpp"
-#include "Scene_Simulation.hpp"
-#include "Vec2.hpp"
-#include "Utils.hpp"
+#include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/SimulationEngine.hpp"
+#include "EcoSimEngine/scene/Scene_Menu.hpp"
+#include "EcoSimEngine/scene/Scene_Simulation.hpp"
+#include "EcoSimEngine/math/Vec2.hpp"
+#include "EcoSimEngine/utils/Utils.hpp"
+#include "EcoSimEngine/utils/SpatialHash.hpp"
 
 
 Scene_Simulation::Scene_Simulation(SimulationEngine* simulation, std::string& simKey)
@@ -111,7 +112,7 @@ void Scene_Simulation::loadDefaultSimulation(std::string& defaultSimulationPath)
         i++;
 
 	    // load species data JSON (per-species data)
-	    std::string speciesFile = "resources/data/species/" + speciesName + ".json";
+	    std::string speciesFile = "resources/definitions/species/" + speciesName + ".json";
 	    std::ifstream sf(speciesFile);
         if (!sf.is_open()) {
             std::cerr << "Could not open species file: " << speciesFile << "\n";
@@ -159,15 +160,86 @@ void Scene_Simulation::sDoAction(const Action& action) {
 
 }
 
+void Scene_Simulation::sMovement(float dt)
+{
+	if (dt <= 0.0f) return; // avoid division by zero
+
+	for (auto& entity : m_entityManager.getEntities()) {
+		if (!entity || !entity->isActive()) continue;
+
+        if (!entity->has<CTransform>()) continue;
+
+        auto& t = entity->get<CTransform>();
+
+        // determine max speed (prefer species-specific desiredSpeed if behavior exists)
+		float maxSpeed = entity->has<CBehavior>() ? entity->get<CBehavior>().maxSpeed : 10; // default max speed // TODO: make it species-specific
+
+        // clamp speed
+		float sp = t.velocity.length();
+        if (sp > maxSpeed) {
+            t.velocity = t.velocity * maxSpeed / sp;
+        }
+
+        // integrate position
+        t.pos += (t.velocity * dt);
+
+        // simple damping so they slow naturally
+        t.velocity = (t.velocity * 0.98f);
+
+        // keep inside world bounds (clamp). Use your world size or config vars:
+        int worldW = m_simulation->window().getSize().x;
+        int worldH = m_simulation->window().getSize().y;
+        if (t.pos.x < 0) t.pos.x = 0;
+        if (t.pos.y < 0) t.pos.y = 0;
+        if (t.pos.x > worldW) t.pos.x = static_cast<float>(worldW);
+        if (t.pos.y > worldH) t.pos.y = static_cast<float>(worldH);
+	}
+}
+
+void Scene_Simulation::sAI(float dt) {
+    for (auto& entity : m_entityManager.getEntities()) {
+        if (!entity || !entity->isActive()) continue;
+        if (!entity->has<CBehavior>() || !entity->has<CTransform>()) continue;
+
+        auto& behavior = entity->get<CBehavior>();
+        auto& t = entity->get<CTransform>();
+
+        // countdown timer for behavior change
+        behavior.stateTimer -= dt;
+        if (behavior.stateTimer <= 0.0f) {
+            behavior.stateTimer = randomFloat(1.0f, 5.0f); // 1–5 sec per new action
+            behavior.current = BehaviorState::Wander;       // simple default
+        }
+
+        // Wander behavior: assign velocity if almost stopped
+        if (behavior.current == BehaviorState::Wander && t.velocity.length() < 0.1f) {
+            Vec2f dir = randomUnitVector();                // helper returns a unit vector in a random direction
+            t.velocity = dir * behavior.movementSpeed;     // sets movement
+        }
+    }
+}
+
 
 void Scene_Simulation::update() {
     m_entityManager.update();
 
+    float dt = m_clock.restart().asSeconds();
+    if (dt <= 0.0f) dt = 1.0f / 60.0f;
+
+    // --- rebuild spatial hash every tick (fast) ---
+    m_spatialHash.clear();
+    for (const auto& ent : m_entityManager.getEntities()) {
+        if (!ent || !ent->isActive()) continue;
+        if (!ent->has<CTransform>()) continue;
+        const auto& t = ent->get<CTransform>();
+        m_spatialHash.insert(ent, t.pos.x, t.pos.y);
+    }
+
     // Implement pause functionality
     if (!m_paused) {
 		//sDrag(); // MAYDELETE
-        //sAI();
-        //sMovement();
+        sAI(dt);
+        sMovement(dt);
         //sStatus();
         //sCollision();
         //sAnimation();
