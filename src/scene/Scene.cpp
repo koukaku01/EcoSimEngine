@@ -1,5 +1,5 @@
-#include "Scene.hpp"
-#include "SimulationEngine.hpp" // full definition needed here
+#include "EcoSimEngine/scene/Scene.hpp"
+#include "EcoSimEngine/SimulationEngine.hpp"
 
 // ===== Protected methods =====
 void Scene::setPaused(bool paused) {

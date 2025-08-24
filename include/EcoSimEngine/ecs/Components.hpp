@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec2.hpp"
+#include "EcoSimEngine/math/Vec2.hpp"
 
 enum class Sex { Male, Female };
 enum class BehaviorState { Idle, Wander, SeekFood, Flee, Reproduce };
@@ -85,6 +85,13 @@ class CBehavior : public Component {
 public:
     BehaviorState current{ BehaviorState::Idle };
     float stateTimer{ 0.0f }; // how long to stay in current state
+    
+    float movementSpeed{ 10.0f }; // "cruise" speed for this entity
+    float maxSpeed{ 15.0f };      // upper bound (e.g. fleeing)
+
 
     CBehavior() = default;
+	CBehavior(float movementSpeed, float maxSpeed)
+		: movementSpeed(movementSpeed), maxSpeed(maxSpeed) {
+	}
 };

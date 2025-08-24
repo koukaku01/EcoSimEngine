@@ -7,8 +7,8 @@
 // - nlohmann/json
 
 #include <SFML/Graphics.hpp>
-#include "SimulationEngine.hpp"
-#include "Vec2.hpp"
+#include "EcoSimEngine/SimulationEngine.hpp"
+#include "EcoSimEngine/math/Vec2.hpp"
 
 int main(void) {
 	SimulationEngine sim("config/config.json");

@@ -4,9 +4,9 @@
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
-#include "nlohmann/json.hpp"
+#include "EcoSimEngine/external/nlohmann/json.hpp"
 
-#include "Assets.hpp"
+#include "EcoSimEngine/ecs/Assets.hpp"
 
 Assets::Assets() = default;
 Assets::~Assets() = default;

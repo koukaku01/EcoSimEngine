@@ -5,8 +5,8 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
-#include "Action.hpp"
-#include "EntityManager.hpp"
+#include "EcoSimEngine/ecs/Action.hpp"
+#include "EcoSimEngine/ecs/EntityManager.hpp"
 
 // Forward declaration to break circular include
 class SimulationEngine;

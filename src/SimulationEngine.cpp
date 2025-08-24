@@ -2,15 +2,15 @@
 #include <string>
 #include <fstream>
 
-#include "nlohmann/json.hpp"
+#include "EcoSimEngine/external/nlohmann/json.hpp"
 
 //#include "imgui.h"
 //#include "imgui-SFML.h"
 #include "SFML/Window/Event.hpp"
 
-#include "Assets.hpp"
-#include "SimulationEngine.hpp"
-#include "Scene_Menu.hpp"
+#include "EcoSimEngine/ecs/Assets.hpp"
+#include "EcoSimEngine/SimulationEngine.hpp"
+#include "EcoSimEngine/scene/Scene_Menu.hpp"
 
 
 SimulationEngine::SimulationEngine(const std::string& path) {

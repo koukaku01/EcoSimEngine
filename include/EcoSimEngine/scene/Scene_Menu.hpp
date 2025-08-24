@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Scene.hpp"
-#include "Action.hpp"
-#include "Assets.hpp"
+#include "EcoSimEngine/scene/Scene.hpp"
+#include "EcoSimEngine/ecs/Action.hpp"
+#include "EcoSimEngine/ecs/Assets.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>

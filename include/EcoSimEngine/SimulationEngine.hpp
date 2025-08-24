@@ -4,9 +4,9 @@
 #include <memory>
 #include "SFML/Graphics/RenderWindow.hpp"
 
-#include "Scene.hpp"
-#include "Assets.hpp"
-#include "SceneManager.hpp"
+#include "EcoSimEngine/scene/Scene.hpp"
+#include "EcoSimEngine/scene/SceneManager.hpp"
+#include "EcoSimEngine/ecs/Assets.hpp"
 
 struct WindowConfig {
     unsigned int width;

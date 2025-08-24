@@ -16,7 +16,7 @@
 	},
 	"paths": {
 		"assets": "resources/assets/assets.json",
-		"species": "resources/data/species",
-		"biomes": "resources/data/biomes"
+		"species": "resources/definitions/species",
+		"biomes": "resources/definitions/biomes"
 	}
 }

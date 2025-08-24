@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.hpp"
+#include "EcoSimEngine/scene/Scene.hpp"
 
 #include <map>
 #include <memory>
