@@ -7,6 +7,7 @@
 #include "EcoSimEngine/scene/Scene.hpp"
 #include "EcoSimEngine/scene/SceneManager.hpp"
 #include "EcoSimEngine/ecs/Assets.hpp"
+#include "EcoSimEngine/system/SystemManager.hpp"
 
 struct WindowConfig {
     unsigned int width;
@@ -22,6 +23,7 @@ protected:
     sf::Clock m_deltaClock; // for imgui
     Assets m_assets;
     SceneManager m_sceneManager;
+	SystemManager m_systemManager;
     size_t m_simulationSpeed{ 1 };
     bool m_running{ true };
     std::shared_ptr<Scene> currentScene();
@@ -32,6 +34,8 @@ protected:
     void update();
 
     void sUserInput();
+
+    
 
 public:
     explicit SimulationEngine(const std::string& path);
@@ -50,4 +54,5 @@ public:
     bool isRunning() const;
 
     SceneManager& sceneManager();
+	SystemManager& systemManager();
 };

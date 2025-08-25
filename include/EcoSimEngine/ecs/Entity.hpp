@@ -4,6 +4,8 @@
 #include <tuple>
 
 #include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/ecs/ComponentIndices.hpp"
+#include "EcoSimEngine/ecs/ComponentType.hpp"
 
 class EntityManager;
 
@@ -23,9 +25,10 @@ class Entity {
     const size_t m_id{ 0 };
     const std::string m_tag{ "default" };
     ComponentTuple m_components;
+	Signature m_signature; // bitset to track which components are present
 
     // constructor is private, so we can never create entities
-    // outside the EntityManager which had friend access
+    //   outside the EntityManager which had friend access
     Entity(size_t id, std::string tag)
         : m_id{ id }, m_tag{ std::move(tag) } {
 	}
@@ -51,6 +54,10 @@ public:
 		return m_tag;
     }
 
+    [[nodiscard]] const Signature& signature() const noexcept {
+		return m_signature;
+	}
+
     template<class T>
     bool has() const noexcept {
         return get<T>().has;
@@ -61,6 +68,7 @@ public:
         auto& component = get<T>();
         component = T(std::forward<TArgs>(mArgs)...);
         component.has = true;
+		m_signature.set(ComponentType<T>::index, true); // mark component as present in signature (set bit ON)
         return component;
     }
 
@@ -79,5 +87,6 @@ public:
         auto& comp = get<T>();
         comp = T();        // reset to default
         comp.has = false;  // explicitly mark as removed
+		m_signature.set(ComponentType<T>::index, false); // mark component as absent in signature (set bit OFF)
     }
 };

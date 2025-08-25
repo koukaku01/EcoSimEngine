@@ -18,57 +18,81 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene_Menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Assets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SimulationEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
+    <ClCompile Include="src\ecs\Assets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene_Simulation.cpp">
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Scene_Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Scene_Simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Components.hpp">
+    <ClInclude Include="include\EcoSimEngine\ecs\Action.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vec2.hpp">
+    <ClInclude Include="include\EcoSimEngine\ecs\Assets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Entity.hpp">
+    <ClInclude Include="include\EcoSimEngine\ecs\Components.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scene.hpp">
+    <ClInclude Include="include\EcoSimEngine\ecs\Entity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\SimulationEngine.hpp">
+    <ClInclude Include="include\EcoSimEngine\ecs\EntityManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Action.hpp">
+    <ClInclude Include="include\EcoSimEngine\external\nlohmann\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Assets.hpp">
+    <ClInclude Include="include\EcoSimEngine\scene\Scene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scene_Menu.hpp">
+    <ClInclude Include="include\EcoSimEngine\scene\SceneManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\nlohmann\json.hpp">
+    <ClInclude Include="include\EcoSimEngine\scene\Scene_Menu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EntityManager.hpp">
+    <ClInclude Include="include\EcoSimEngine\scene\Scene_Simulation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\SceneManager.hpp">
+    <ClInclude Include="include\EcoSimEngine\SimulationEngine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scene_Simulation.hpp">
+    <ClInclude Include="include\EcoSimEngine\utils\SpatialHash.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\utils\Utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\math\Vec2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\ecs\ComponentIndices.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\ecs\ComponentType.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\system\System.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\system\SystemManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\system\MovementSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\system\AISystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -81,9 +105,9 @@
     <None Include="README.md" />
     <None Include="resources\assets\assets.json" />
     <None Include="resources\assets\sounds\foo_themeSong.ogg" />
-    <None Include="Simulations\default_simulation.json" />
-    <None Include="resources\data\species\rabbit.json" />
-    <None Include="resources\data\species\fox.json" />
+    <None Include="resources\definitions\species\fox.json" />
+    <None Include="resources\definitions\species\rabbit.json" />
+    <None Include="resources\defaults\default_simulation.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config\config.json" />
