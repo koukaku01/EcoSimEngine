@@ -95,6 +95,9 @@
     <ClInclude Include="include\EcoSimEngine\system\AISystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\ecs\ComponentManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\Roboto\Roboto-Italic-VariableFont_wdth,wght.ttf" />

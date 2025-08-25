@@ -7,6 +7,7 @@
 
 #include "EcoSimEngine/ecs/Action.hpp"
 #include "EcoSimEngine/ecs/EntityManager.hpp"
+#include "EcoSimEngine/ecs/ComponentManager.hpp"
 
 // Forward declaration to break circular include
 class SimulationEngine;
@@ -17,6 +18,7 @@ class Scene {
 protected:
     SimulationEngine* m_simulation{ nullptr };
     EntityManager m_entityManager;
+	ComponentManager m_componentManager;
     ActionMap m_actionMap;
     bool m_paused{ false };
     bool m_hasEnded{ false };

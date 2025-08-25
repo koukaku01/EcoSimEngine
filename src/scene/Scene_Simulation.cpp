@@ -26,7 +26,8 @@
 
 
 Scene_Simulation::Scene_Simulation(SimulationEngine* engine, const std::string& simKey)
-    : Scene(engine), m_simKey(simKey)
+    : Scene(engine)
+    , m_simKey(simKey)
 {
     init(simKey);
 }
@@ -34,6 +35,7 @@ Scene_Simulation::Scene_Simulation(SimulationEngine* engine, const std::string& 
 void Scene_Simulation::init(const std::string& simulationKey) {
     // Give the entity manager a pointer to the SystemManager so component adds notify systems:
     m_entityManager.setSystemManager(&m_simulation->systemManager());
+    m_entityManager.setComponentManager(&m_componentManager);
 
     // Decide whether to load a named simulation (if provided) or default
     if (!simulationKey.empty()) {
@@ -84,8 +86,7 @@ void Scene_Simulation::loadSimulation(const std::string& simulationKey) {
     }
 
     // Clear any existing entities, then spawn from JSON
-    m_entityManager = EntityManager();
-    m_entityManager.setSystemManager(&m_simulation->systemManager());
+    m_entityManager = EntityManager(&m_simulation->systemManager(), &m_componentManager);
     spawnFromJson(simJson);
 }
 
@@ -106,9 +107,7 @@ void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulatio
     }
 
     // reset EntityManager and ensure SimulationEngine has a reference to the SystemManager
-    m_entityManager = EntityManager();
-    m_entityManager.setSystemManager(&m_simulation->systemManager());
-
+    m_entityManager = EntityManager(&m_simulation->systemManager(), &m_componentManager);
     spawnFromJson(simJson);
 }
 
@@ -209,10 +208,10 @@ void Scene_Simulation::update() {
 		//sDrag(); // MAYDELETE
        // call AI first, then Movement
         if (auto ais = m_simulation->systemManager().GetSystem<AISystem>()) {
-            ais->update(m_entityManager, dt);
+            ais->update(m_entityManager, m_componentManager, dt);
         }
         if (auto ms = m_simulation->systemManager().GetSystem<MovementSystem>()) {
-            ms->update(m_entityManager, dt);
+            ms->update(m_entityManager, m_componentManager, dt);
         }
         //sStatus();
         //sCollision();
@@ -243,26 +242,20 @@ void Scene_Simulation::sRender() {
 
     for (const auto& entity : m_entityManager.getEntities()) {
         if (!entity->isActive()) continue;
+		const auto id = entity->id();
+        if (!m_componentManager.has<CTransform>(id)) continue;
+        const auto& transform = m_componentManager.get<CTransform>(id);
 
-        if (m_entityManager.hasComponent<CTransform>(entity)) {
-            const auto& transform = m_entityManager.getComponent<CTransform>(entity);
-            const auto& species = m_entityManager.getComponent<CSpecies>(entity);
+        sf::CircleShape circle(10.0f);
+        circle.setOrigin({ circle.getRadius(), circle.getRadius() });
+        circle.setPosition(transform.pos);
 
-            sf::CircleShape circle(5.0f);
-            circle.setOrigin({ circle.getRadius(), circle.getRadius() });
-            circle.setPosition(transform.pos);
+        // lookup species color
+        const auto& species = m_componentManager.get<CSpecies>(id);
+        auto it = m_speciesColors.find(species.speciesName);
+        circle.setFillColor(it != m_speciesColors.end() ? it->second : sf::Color::White);
 
-            // lookup species color
-            auto it = m_speciesColors.find(species.speciesName);
-            if (it != m_speciesColors.end()) {
-                circle.setFillColor(it->second);
-            }
-            else {
-                circle.setFillColor(sf::Color::White); // fallback
-            }
-
-            win.draw(circle);
-        }
+        win.draw(circle);
     }
 }
 

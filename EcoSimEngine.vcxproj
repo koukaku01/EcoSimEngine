@@ -138,6 +138,7 @@
     <ClInclude Include="include\EcoSimEngine\ecs\Action.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Assets.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\ComponentIndices.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\ComponentManager.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Components.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\ComponentType.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Entity.hpp" />

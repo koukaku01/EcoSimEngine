@@ -9,80 +9,21 @@
 
 class EntityManager;
 
-using ComponentTuple = std::tuple<
-	CTransform,
-	CSpecies,
-	CHealth,
-	CEnergy,
-	CReproductive,
-	CBehavior
->;
-
 class Entity {
     friend class EntityManager;
 
-    // -------------------
-    // Private members
-    // -------------------
     bool m_active{ true };
     const size_t m_id{ 0 };
     const std::string m_tag{ "default" };
-    ComponentTuple m_components;
-	Signature m_signature; // bitset to track which components are present
+    Signature m_signature{}; // bitset to track which components are present
     
-    // -------------------
-    // Constructor
-    // -------------------
     // constructor is private, so we can never create entities
     //   outside the EntityManager which had friend access
     Entity(size_t id, std::string tag)
         : m_id{ id }, m_tag{ std::move(tag) } {
 	}
 
-    // -------------------
-    // Deprecated component manipulation (private)
-    // -------------------
-    template<class T, typename... TArgs>
-    [[deprecated("Use EntityManager::addComponent instead")]]
-    T& add(TArgs &&... mArgs) {
-        auto& component = get<T>();
-        component = T(std::forward<TArgs>(mArgs)...);
-        component.has = true;
-        m_signature.set(ComponentType<T>::index, true); // mark component as present in signature (set bit ON)
-        return component;
-    }
-
-    template<class T>
-    [[deprecated("Use EntityManager::removeComponent instead")]]
-    void remove() {
-        auto& comp = get<T>();
-        comp = T();        // reset to default
-        comp.has = false;  // explicitly mark as removed
-        m_signature.set(ComponentType<T>::index, false); // mark component as absent in signature (set bit OFF)
-    }
-
-    template<class T>
-    [[deprecated("Use EntityManager::addComponent / removeComponent / ComponentManager::get/has")]]
-    bool has() const noexcept {
-        return get<T>().has;
-    }
-
-    template<class T>
-    [[deprecated("Use EntityManager::addComponent / removeComponent / ComponentManager::get/has")]]
-    T& get() {
-        return std::get<T>(m_components);
-    }
-
-    template<class T>
-    [[deprecated("Use EntityManager::addComponent / removeComponent / ComponentManager::get/has")]]
-    const T& get() const {
-        return std::get<T>(m_components);
-    }
-
 public:
-    // -------------------
-    // Public interface
-    // -------------------
     void destroy()
     {
         m_active = false;
@@ -106,4 +47,7 @@ public:
     [[nodiscard]] const Signature& signature() const noexcept {
 		return m_signature;
 	}
+
+    // mutable access for managers
+    Signature& signature() noexcept { return m_signature; }
 };
