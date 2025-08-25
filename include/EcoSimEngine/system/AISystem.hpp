@@ -15,10 +15,10 @@ public:
         {
             auto e = em.getEntityById(id);
             if (!e || !e->isActive()) continue;
-            if (!e->has<CBehavior>() || !e->has<CTransform>()) continue;
-
-            auto& behavior = e->get<CBehavior>();
-            auto& t = e->get<CTransform>();
+            if (!em.hasComponent<CBehavior>(e) || !em.hasComponent<CTransform>(e)) continue;
+            
+            auto& behavior = em.getComponent<CBehavior>(e);
+            auto& t = em.getComponent<CTransform>(e);
 
             behavior.stateTimer -= dt;
             if (behavior.stateTimer <= 0.0f) {

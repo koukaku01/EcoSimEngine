@@ -16,13 +16,13 @@ public:
         for (EntityId id : mEntities) {
             auto e = em.getEntityById(id);
             if (!e || !e->isActive()) continue;
-            if (!e->has<CTransform>()) continue; // has position and velocity
+            if (!em.hasComponent<CTransform>(e)) continue; // has position and velocity
 
-            auto& t = e->get<CTransform>();
+            auto& t = em.getComponent<CTransform>(e);
 
             // clamp speed using behavior if present
             float maxSpeed = 10.0f;
-            if (e->has<CBehavior>()) maxSpeed = e->get<CBehavior>().maxSpeed;
+            if (em.hasComponent<CBehavior>(e)) maxSpeed = em.getComponent<CBehavior>(e).maxSpeed;
 
             float sp = t.velocity.length();
             if (sp > maxSpeed) t.velocity = t.velocity * (maxSpeed / sp);

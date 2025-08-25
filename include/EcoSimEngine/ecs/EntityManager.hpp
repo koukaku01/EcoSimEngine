@@ -94,6 +94,21 @@ public:
         if (m_systemManager) m_systemManager->EntityDestroyed(entity->id());
     }
 
+    template<typename T>
+    bool hasComponent(const std::shared_ptr<Entity>& entity) const {
+        return entity->has<T>(); // temporary
+    }
+
+    template<typename T>
+    T& getComponent(const std::shared_ptr<Entity>& entity) {
+        return entity->get<T>(); // temporary
+    }
+
+    template<typename T>
+    const T& getComponent(const std::shared_ptr<Entity>& entity) const {
+        return entity->get<T>(); // temporary
+    }
+
 
 
     void update() {
