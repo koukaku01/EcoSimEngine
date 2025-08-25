@@ -17,8 +17,8 @@ using ActionMap = std::map<sf::Keyboard::Key, ActionName>;
 class Scene {
 protected:
     SimulationEngine* m_simulation{ nullptr };
-    EntityManager m_entityManager;
-	ComponentManager m_componentManager;
+    // EntityManager m_entityManager;
+	// ComponentManager m_componentManager; // REFACTORING
     ActionMap m_actionMap;
     bool m_paused{ false };
     bool m_hasEnded{ false };

@@ -28,6 +28,9 @@ protected:
     bool m_running{ true };
     std::shared_ptr<Scene> currentScene();
 
+     ComponentManager m_componentManager; // REFACTORING ADD
+     EntityManager m_entityManager;
+
 
     void init(const std::string& path);
 
@@ -53,6 +56,8 @@ public:
 
     bool isRunning() const;
 
-    SceneManager& sceneManager();
-	SystemManager& systemManager();
+    SceneManager& sceneManager() noexcept { return m_sceneManager; }
+    SystemManager& systemManager() noexcept { return m_systemManager; }
+    EntityManager& entityManager() noexcept { return m_entityManager; }
+    ComponentManager& componentManager() noexcept { return m_componentManager; }
 };

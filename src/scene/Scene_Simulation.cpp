@@ -33,10 +33,6 @@ Scene_Simulation::Scene_Simulation(SimulationEngine* engine, const std::string& 
 }
 
 void Scene_Simulation::init(const std::string& simulationKey) {
-    // Give the entity manager a pointer to the SystemManager so component adds notify systems:
-    m_entityManager.setSystemManager(&m_simulation->systemManager());
-    m_entityManager.setComponentManager(&m_componentManager);
-
     // Decide whether to load a named simulation (if provided) or default
     if (!simulationKey.empty()) {
         loadSimulation(simulationKey);
@@ -45,9 +41,9 @@ void Scene_Simulation::init(const std::string& simulationKey) {
         loadDefaultSimulation(m_defaultSimulationPath);
     }
 
-   // MAYDELETE
-   // m_gridText.setCharacterSize(12);
-   // m_gridText.setFont(m_simulation->assets().getFont("Main"));
+    // MAYDELETE
+    // m_gridText.setCharacterSize(12);
+    // m_gridText.setFont(m_simulation->assets().getFont("Main"));
 
     registerAction(sf::Keyboard::Key::Escape, ActionName::QUIT_AND_SAVE);
     registerAction(sf::Keyboard::Key::P, ActionName::PAUSE);
@@ -85,8 +81,8 @@ void Scene_Simulation::loadSimulation(const std::string& simulationKey) {
         return;
     }
 
-    // Clear any existing entities, then spawn from JSON
-    m_entityManager = EntityManager(&m_simulation->systemManager(), &m_componentManager);
+    // Clear any existing entities
+    m_simulation->entityManager().clearAll();
     spawnFromJson(simJson);
 }
 
@@ -106,12 +102,15 @@ void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulatio
         return;
     }
 
-    // reset EntityManager and ensure SimulationEngine has a reference to the SystemManager
-    m_entityManager = EntityManager(&m_simulation->systemManager(), &m_componentManager);
+    // Clear any existing entities
+    m_simulation->entityManager().clearAll();
     spawnFromJson(simJson);
 }
 
 void Scene_Simulation::spawnFromJson(const nlohmann::json& simJson) {
+    auto& em = m_simulation->entityManager();
+    auto& cm = m_simulation->componentManager();
+
     // read population counts
     auto populations = simJson["simulation"]["initialPopulation"];
 
@@ -133,55 +132,54 @@ void Scene_Simulation::spawnFromJson(const nlohmann::json& simJson) {
         ++idx;
     }
 
-
     for (auto& [speciesName, popData] : populations.items()) {
         int total = popData["total"];
-		int males = popData["male"];
-		int females = popData["female"];
+        int males = popData["male"];
+        int females = popData["female"];
 
-	    // load species data JSON (per-species data)
-	    std::string speciesFile = "resources/definitions/species/" + speciesName + ".json";
-	    std::ifstream sf(speciesFile);
+        // load species data JSON (per-species data)
+        std::string speciesFile = "resources/definitions/species/" + speciesName + ".json";
+        std::ifstream sf(speciesFile);
         if (!sf.is_open()) {
             std::cerr << "Could not open species file: " << speciesFile << "\n";
             continue;
         }
         nlohmann::json speciesJson;
-	    sf >> speciesJson;
+        sf >> speciesJson;
 
         // create entities
         for (int i = 0; i < total; ++i) {
-            auto entity = m_entityManager.addEntity(speciesName);
+            auto entity = em.addEntity(speciesName);
 
-            // --- add Compoennts ---
-			m_entityManager.addComponent<CSpecies>(entity, speciesName, 0); // default age is 0
-            m_entityManager.addComponent<CHealth>(entity, 100.0f);
-            m_entityManager.addComponent<CEnergy>(entity, 100.0f);
+            // --- add Components ---
+            em.addComponent<CSpecies>(entity, speciesName, 0); // default age is 0
+            em.addComponent<CHealth>(entity, 100.0f);
+            em.addComponent<CEnergy>(entity, 100.0f);
 
             // proper random position
             float x = distX(gen);
             float y = distY(gen);
-            m_entityManager.addComponent<CTransform>(entity, Vec2f(x, y));
+            em.addComponent<CTransform>(entity, Vec2f(x, y));
 
             // reproductive component
-			auto& repro = m_entityManager.addComponent<CReproductive>(entity);
+            auto& repro = em.addComponent<CReproductive>(entity);
             repro.sex = (i < males ? Sex::Male : Sex::Female);
             repro.canReproduce = true;
 
             // TODO
-            m_entityManager.addComponent<CBehavior>(entity);
+            em.addComponent<CBehavior>(entity);
         }
         std::cout << "Loaded " << total << " " << speciesName << " entities.\n";
     }
 
     // Now flush pending entities -> this also calls EntitySignatureChanged for newly added entities
-    m_entityManager.update();    	
+    em.update();
 }
 
 void Scene_Simulation::sDoAction(const Action& action) {
     if (action.type() != ActionType::START) return;
 
-    if (action.name() == ActionName::QUIT_AND_SAVE) 
+    if (action.name() == ActionName::QUIT_AND_SAVE)
     {
         onEnd();
     }
@@ -189,29 +187,32 @@ void Scene_Simulation::sDoAction(const Action& action) {
 }
 
 void Scene_Simulation::update() {
-    m_entityManager.update();
+    auto& em = m_simulation->entityManager();
+    auto& cm = m_simulation->componentManager();
+
+    em.update();
 
     float dt = m_clock.restart().asSeconds();
     if (dt <= 0.0f) dt = 1.0f / 60.0f;
 
     // --- rebuild spatial hash every tick (fast) ---
     m_spatialHash.clear();
-    for (const auto& ent : m_entityManager.getEntities()) {
+    for (const auto& ent : em.getEntities()) {
         if (!ent || !ent->isActive()) continue;
-        if (!m_entityManager.hasComponent<CTransform>(ent)) continue;
-        const auto& t = m_entityManager.getComponent<CTransform>(ent);
+        if (!cm.has<CTransform>(ent->id())) continue;
+        const auto& t = cm.get<CTransform>(ent->id());
         m_spatialHash.insert(ent, t.pos.x, t.pos.y);
     }
 
     // Implement pause functionality
     if (!m_paused) {
-		//sDrag(); // MAYDELETE
+        //sDrag(); // MAYDELETE
        // call AI first, then Movement
         if (auto ais = m_simulation->systemManager().GetSystem<AISystem>()) {
-            ais->update(m_entityManager, m_componentManager, dt);
+            ais->update(em, cm, dt);
         }
         if (auto ms = m_simulation->systemManager().GetSystem<MovementSystem>()) {
-            ms->update(m_entityManager, m_componentManager, dt);
+            ms->update(em, cm, dt);
         }
         //sStatus();
         //sCollision();
@@ -237,21 +238,24 @@ void Scene_Simulation::onEnd() {
 
 
 void Scene_Simulation::sRender() {
+    auto& em = m_simulation->entityManager();
+    auto& cm = m_simulation->componentManager();
+
     sf::RenderWindow& win = m_simulation->window();
     win.clear(sf::Color(15, 15, 20));
 
-    for (const auto& entity : m_entityManager.getEntities()) {
+    for (const auto& entity : em.getEntities()) {
         if (!entity->isActive()) continue;
-		const auto id = entity->id();
-        if (!m_componentManager.has<CTransform>(id)) continue;
-        const auto& transform = m_componentManager.get<CTransform>(id);
+        const auto id = entity->id();
+        if (!cm.has<CTransform>(id)) continue;
+        const auto& transform = cm.get<CTransform>(id);
 
         sf::CircleShape circle(10.0f);
         circle.setOrigin({ circle.getRadius(), circle.getRadius() });
         circle.setPosition(transform.pos);
 
         // lookup species color
-        const auto& species = m_componentManager.get<CSpecies>(id);
+        const auto& species = cm.get<CSpecies>(id);
         auto it = m_speciesColors.find(species.speciesName);
         circle.setFillColor(it != m_speciesColors.end() ? it->second : sf::Color::White);
 
