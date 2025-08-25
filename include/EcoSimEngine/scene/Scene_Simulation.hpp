@@ -50,4 +50,7 @@ public:
     Scene_Simulation(SimulationEngine* simulationEngine, const std::string& simKey = {}); // Constructor takes in specific simulation name
 
     void update() override;
+
+	// helpers
+    std::string buildSavePathFromKey(const std::string& key);
 };
