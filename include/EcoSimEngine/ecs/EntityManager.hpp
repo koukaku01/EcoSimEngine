@@ -159,4 +159,37 @@ public:
     {
 		return m_entityMap;
     }
+
+    void clearAll() noexcept {
+        // 1) Mark all entities destroyed and notify systems to remove them
+        for (const auto& entity : m_entities) {
+            if (!entity) continue;
+            if (entity->isActive()) entity->destroy();
+            if (m_systemManager) m_systemManager->EntityDestroyed(entity->id());
+        }
+
+        for (const auto& entity : m_entitiesToAdd) {
+            if (!entity) continue;
+            if (entity->isActive()) entity->destroy();
+            if (m_systemManager) m_systemManager->EntityDestroyed(entity->id());
+        }
+
+        // 2) Clear all component storage to avoid stale components
+        if (m_componentManager) {
+            m_componentManager->clear();
+        }
+
+        // 3) Remove all entities from our containers
+        m_entities.clear();
+        m_entitiesToAdd.clear();
+        m_entityMap.clear();
+
+        // 4) Reset entity counter and any ID-recycling structures (if present)
+        m_totalEntities = 0;
+        // If you later add a free-id vector or id-indexed storage, clear it here too:
+        // m_freeIds.clear();
+        // m_entitiesById.clear();
+    }
+
+
 };

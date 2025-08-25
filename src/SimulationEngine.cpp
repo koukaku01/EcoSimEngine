@@ -15,7 +15,11 @@
 #include "EcoSimEngine/system/AISystem.hpp"
 
 
-SimulationEngine::SimulationEngine(const std::string& path) {
+SimulationEngine::SimulationEngine(const std::string& path)
+    : m_systemManager()
+    , m_componentManager()
+    , m_entityManager(&m_systemManager, &m_componentManager)
+{
     init(path);
 }
 
@@ -206,7 +210,3 @@ void SimulationEngine::update() {
 Assets& SimulationEngine::assets() {
     return m_assets;
 }
-
-SceneManager& SimulationEngine::sceneManager() { return m_sceneManager; }
-SystemManager& SimulationEngine::systemManager() { return m_systemManager; }
-
