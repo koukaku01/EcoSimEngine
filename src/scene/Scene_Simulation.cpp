@@ -21,14 +21,17 @@
 #include "EcoSimEngine/math/Vec2.hpp"
 #include "EcoSimEngine/utils/Utils.hpp"
 #include "EcoSimEngine/utils/SpatialHash.hpp"
+#include "EcoSimEngine/system/MovementSystem.hpp"
+#include "EcoSimEngine/system/AISystem.hpp"
 
 
-Scene_Simulation::Scene_Simulation(SimulationEngine* simulation, std::string& simKey)
-    : Scene(simulation), m_simKey(simKey){
+Scene_Simulation::Scene_Simulation(SimulationEngine* engine, const std::string& simKey)
+    : Scene(engine), m_simKey(simKey)
+{
     init(simKey);
 }
 
-void Scene_Simulation::init(std::string& simulationKey) {
+void Scene_Simulation::init(const std::string& simulationKey) {
 	loadSimulation(simulationKey);
 
     // MAYDELETE
@@ -49,7 +52,7 @@ void Scene_Simulation::init(std::string& simulationKey) {
     registerAction(sf::Keyboard::Key::D, ActionName::RIGHT);
 }
 
-void Scene_Simulation::loadSimulation(std::string& simulationKey) {
+void Scene_Simulation::loadSimulation(const std::string& simulationKey) {
     // reset the entity manager every time we load a level
     m_entityManager = EntityManager();
 	// Load the simulation data from a file or database
@@ -64,11 +67,16 @@ void Scene_Simulation::loadSimulation(std::string& simulationKey) {
 	loadDefaultSimulation(m_defaultSimulationPath);
 }
 
-void Scene_Simulation::loadDefaultSimulation(std::string& defaultSimulationPath) {
+void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulationPath) {
 	// Load default entities and components for the simulation from default JSON
     
-    // reset the entity manager every time we load a level
+	// reset the entity manager every time we load a Simulation
     m_entityManager = EntityManager();
+
+    //after creating/resetting m_entityManager
+    // ensure SimulationEngine has systemManager() and you already called engine.initSystems()
+    m_entityManager.setSystemManager(&m_simulation->systemManager());
+
 
 	std::cout << "Loading default simulation from: " << defaultSimulationPath << std::endl;
 
@@ -160,66 +168,6 @@ void Scene_Simulation::sDoAction(const Action& action) {
 
 }
 
-void Scene_Simulation::sMovement(float dt)
-{
-	if (dt <= 0.0f) return; // avoid division by zero
-
-	for (auto& entity : m_entityManager.getEntities()) {
-		if (!entity || !entity->isActive()) continue;
-
-        if (!entity->has<CTransform>()) continue;
-
-        auto& t = entity->get<CTransform>();
-
-        // determine max speed (prefer species-specific desiredSpeed if behavior exists)
-		float maxSpeed = entity->has<CBehavior>() ? entity->get<CBehavior>().maxSpeed : 10; // default max speed // TODO: make it species-specific
-
-        // clamp speed
-		float sp = t.velocity.length();
-        if (sp > maxSpeed) {
-            t.velocity = t.velocity * maxSpeed / sp;
-        }
-
-        // integrate position
-        t.pos += (t.velocity * dt);
-
-        // simple damping so they slow naturally
-        t.velocity = (t.velocity * 0.98f);
-
-        // keep inside world bounds (clamp). Use your world size or config vars:
-        int worldW = m_simulation->window().getSize().x;
-        int worldH = m_simulation->window().getSize().y;
-        if (t.pos.x < 0) t.pos.x = 0;
-        if (t.pos.y < 0) t.pos.y = 0;
-        if (t.pos.x > worldW) t.pos.x = static_cast<float>(worldW);
-        if (t.pos.y > worldH) t.pos.y = static_cast<float>(worldH);
-	}
-}
-
-void Scene_Simulation::sAI(float dt) {
-    for (auto& entity : m_entityManager.getEntities()) {
-        if (!entity || !entity->isActive()) continue;
-        if (!entity->has<CBehavior>() || !entity->has<CTransform>()) continue;
-
-        auto& behavior = entity->get<CBehavior>();
-        auto& t = entity->get<CTransform>();
-
-        // countdown timer for behavior change
-        behavior.stateTimer -= dt;
-        if (behavior.stateTimer <= 0.0f) {
-            behavior.stateTimer = randomFloat(1.0f, 5.0f); // 1–5 sec per new action
-            behavior.current = BehaviorState::Wander;       // simple default
-        }
-
-        // Wander behavior: assign velocity if almost stopped
-        if (behavior.current == BehaviorState::Wander && t.velocity.length() < 0.1f) {
-            Vec2f dir = randomUnitVector();                // helper returns a unit vector in a random direction
-            t.velocity = dir * behavior.movementSpeed;     // sets movement
-        }
-    }
-}
-
-
 void Scene_Simulation::update() {
     m_entityManager.update();
 
@@ -238,8 +186,13 @@ void Scene_Simulation::update() {
     // Implement pause functionality
     if (!m_paused) {
 		//sDrag(); // MAYDELETE
-        sAI(dt);
-        sMovement(dt);
+       // call AI first, then Movement
+        if (auto ais = m_simulation->systemManager().GetSystem<AISystem>()) {
+            ais->update(m_entityManager, dt);
+        }
+        if (auto ms = m_simulation->systemManager().GetSystem<MovementSystem>()) {
+            ms->update(m_entityManager, dt);
+        }
         //sStatus();
         //sCollision();
         //sAnimation();

@@ -137,7 +137,9 @@
   <ItemGroup>
     <ClInclude Include="include\EcoSimEngine\ecs\Action.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Assets.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\ComponentIndices.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Components.hpp" />
+    <ClInclude Include="include\EcoSimEngine\ecs\ComponentType.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Entity.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\EntityManager.hpp" />
     <ClInclude Include="include\EcoSimEngine\external\nlohmann\json.hpp" />
@@ -146,6 +148,10 @@
     <ClInclude Include="include\EcoSimEngine\scene\Scene_Menu.hpp" />
     <ClInclude Include="include\EcoSimEngine\scene\Scene_Simulation.hpp" />
     <ClInclude Include="include\EcoSimEngine\SimulationEngine.hpp" />
+    <ClInclude Include="include\EcoSimEngine\system\AISystem.hpp" />
+    <ClInclude Include="include\EcoSimEngine\system\MovementSystem.hpp" />
+    <ClInclude Include="include\EcoSimEngine\system\System.hpp" />
+    <ClInclude Include="include\EcoSimEngine\system\SystemManager.hpp" />
     <ClInclude Include="include\EcoSimEngine\utils\SpatialHash.hpp" />
     <ClInclude Include="include\EcoSimEngine\utils\Utils.hpp" />
     <ClInclude Include="include\EcoSimEngine\math\Vec2.hpp" />

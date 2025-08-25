@@ -1,13 +1,11 @@
 #pragma once
 
+#include "EcoSimEngine/math/Vec2.hpp"
 #include <SFML/Graphics/Color.hpp>
-
-#include <SFML/System/Vector2.hpp>
-
 #include <cmath>
+#include <random>
 
-
-sf::Color hslToRgb(float h, float s, float l) {
+inline sf::Color hslToRgb(float h, float s, float l) {
     float c = (1 - std::fabs(2 * l - 1)) * s;
     float x = c * (1 - std::fabs(fmod(h / 60.0f, 2) - 1));
     float m = l - c / 2;
@@ -27,11 +25,13 @@ sf::Color hslToRgb(float h, float s, float l) {
     );
 }
 
-Vec2f randomUnitVector() {
-    float angle = static_cast<float>(rand()) / RAND_MAX * 2.0f * 3.1415926f;
-    return Vec2f(cos(angle), sin(angle));
+inline float randomFloat(float a, float b) {
+    static thread_local std::mt19937 gen((std::random_device())());
+    std::uniform_real_distribution<float> d(a, b);
+    return d(gen);
 }
 
-float randomFloat(float min, float max) {
-    return min + static_cast<float>(rand()) / RAND_MAX * (max - min);
+inline Vec2f randomUnitVector() {
+    float a = randomFloat(0.0f, 2.0f * 3.14159265358979323846f);
+    return Vec2f{ std::cos(a), std::sin(a) };
 }

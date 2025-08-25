@@ -5,10 +5,13 @@
 #include <vector>
 
 #include "EcoSimEngine/ecs/Entity.hpp"
+#include "EcoSimEngine/system/SystemManager.hpp"
 
 
 using EntityVec = std::vector<std::shared_ptr<Entity>>;
 using EntityMap = std::map<std::string, EntityVec>;
+
+class SystemManager; // forward declaration
 
 /**
  * @brief EntityManager class for managing game entities.
@@ -26,6 +29,9 @@ class EntityManager {
     EntityVec m_entitiesToAdd;  // entities to add next update
     EntityMap m_entityMap;      // map from entity tag to vectors
     size_t m_totalEntities{ 0 }; // total entities created
+
+	// Pointer to the engine's SystemManger so we can notify on signature change / destruction
+    SystemManager* m_systemManager{ nullptr };
 
     /**
      * @brief Removes all inactive entities from the given vector.
@@ -49,6 +55,47 @@ class EntityManager {
 public:
 	EntityManager() = default;
 
+    // Give the EntityManager a reference to the SystemManager so it can notify about changes.
+    void setSystemManager(SystemManager* sm) { m_systemManager = sm; }
+
+    // Find entity by numeric id. Linear search — fine for small projects / prototypes.
+    std::shared_ptr<Entity> getEntityById(size_t id) {
+        for (auto& e : m_entities) {
+            if (e && e->id() == id) return e;
+        }
+        for (auto& e : m_entitiesToAdd) {
+            if (e && e->id() == id) return e;
+        }
+        return nullptr;
+    }
+
+    // Add a component via the manager so systems are notified automatically.
+    template<typename T, typename... Args>
+    T& addComponent(const std::shared_ptr<Entity>& entity, Args&&... args) {
+        auto& comp = entity->add<T>(std::forward<Args>(args)...);
+        if (m_systemManager) {
+            m_systemManager->EntitySignatureChanged(entity->id(), entity->signature());
+        }
+        return comp;
+    }
+
+    template<typename T>
+    void removeComponent(const std::shared_ptr<Entity>& entity) {
+        entity->remove<T>();
+        if (m_systemManager) {
+            m_systemManager->EntitySignatureChanged(entity->id(), entity->signature());
+        }
+    }
+
+    // Prefer calling this instead of entity->destroy() so systems are informed.
+    void destroyEntity(const std::shared_ptr<Entity>& entity) {
+        if (!entity) return;
+        entity->destroy();
+        if (m_systemManager) m_systemManager->EntityDestroyed(entity->id());
+    }
+
+
+
     void update() {
         // Add entities from m_entitiesToAdd to:
         // 1. The main entity vector (m_entities)
@@ -56,6 +103,11 @@ public:
         for (const auto& entity : m_entitiesToAdd) {
             m_entities.push_back(entity);
             m_entityMap[entity->tag()].push_back(entity);
+
+                        // notify systems about this entity's current signature
+                if (m_systemManager) {
+                    m_systemManager->EntitySignatureChanged(entity->id(), entity->signature());
+            }
         }
         m_entitiesToAdd.clear();
 
