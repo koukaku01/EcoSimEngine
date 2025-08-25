@@ -32,9 +32,18 @@ Scene_Simulation::Scene_Simulation(SimulationEngine* engine, const std::string& 
 }
 
 void Scene_Simulation::init(const std::string& simulationKey) {
-	loadSimulation(simulationKey);
+    // Give the entity manager a pointer to the SystemManager so component adds notify systems:
+    m_entityManager.setSystemManager(&m_simulation->systemManager());
 
-    // MAYDELETE
+    // Decide whether to load a named simulation (if provided) or default
+    if (!simulationKey.empty()) {
+        loadSimulation(simulationKey);
+    }
+    else {
+        loadDefaultSimulation(m_defaultSimulationPath);
+    }
+
+   // MAYDELETE
    // m_gridText.setCharacterSize(12);
    // m_gridText.setFont(m_simulation->assets().getFont("Main"));
 
@@ -53,60 +62,76 @@ void Scene_Simulation::init(const std::string& simulationKey) {
 }
 
 void Scene_Simulation::loadSimulation(const std::string& simulationKey) {
-    // reset the entity manager every time we load a level
-    m_entityManager = EntityManager();
-	// Load the simulation data from a file or database
-	// For now, we will just print the simulation key
-	std::cout << "Loading simulation with key: " << simulationKey << std::endl;
-	// Here you would typically load entities, components, and other simulation data
-	// For example:
-	// m_entityManager.loadEntitiesFromFile(simulationKey + ".entities");
-	// m_componentManager.loadComponentsFromFile(simulationKey + ".components");
+    // TODO: implement full named-save loading; for now attempt to open a file, fallback to default.
+    const auto path = buildSavePathFromKey(simulationKey);
+    std::ifstream ifs(path);
+    if (!ifs.is_open()) {
+        std::cerr << "No save found for key \"" << simulationKey
+            << "\" at " << path << " — loading default.\n";
+        loadDefaultSimulation(m_defaultSimulationPath);
+        return;
+    }
 
-    // Load default simulation
-	loadDefaultSimulation(m_defaultSimulationPath);
+    nlohmann::json simJson;
+    try {
+        ifs >> simJson;
+    }
+    catch (const nlohmann::json::parse_error& e) {
+        std::cerr << "Failed to parse save file " << path << ": " << e.what()
+            << " — loading default.\n";
+        loadDefaultSimulation(m_defaultSimulationPath);
+        return;
+    }
+
+    // Clear any existing entities, then spawn from JSON
+    m_entityManager = EntityManager();
+    m_entityManager.setSystemManager(&m_simulation->systemManager());
+    spawnFromJson(simJson);
 }
 
 void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulationPath) {
-	// Load default entities and components for the simulation from default JSON
-    
-	// reset the entity manager every time we load a Simulation
-    m_entityManager = EntityManager();
-
-    //after creating/resetting m_entityManager
-    // ensure SimulationEngine has systemManager() and you already called engine.initSystems()
-    m_entityManager.setSystemManager(&m_simulation->systemManager());
-
-
-	std::cout << "Loading default simulation from: " << defaultSimulationPath << std::endl;
-
-	std::ifstream file(defaultSimulationPath);
-    if (!file.is_open()) {
+    std::ifstream ifs(defaultSimulationPath);
+    if (!ifs.is_open()) {
         std::cerr << "Error: Could not open default simulation file: " << defaultSimulationPath << std::endl;
         return;
     }
 
-	nlohmann::json sim;
-	file >> sim;
+    nlohmann::json simJson;
+    try {
+        ifs >> simJson;
+    }
+    catch (const nlohmann::json::parse_error& e) {
+        std::cerr << "Failed to parse default simulation file " << defaultSimulationPath << ": " << e.what() << "\n";
+        return;
+    }
 
+    // reset EntityManager and ensure SimulationEngine has a reference to the SystemManager
+    m_entityManager = EntityManager();
+    m_entityManager.setSystemManager(&m_simulation->systemManager());
+
+    spawnFromJson(simJson);
+}
+
+void Scene_Simulation::spawnFromJson(const nlohmann::json& simJson) {
     // read population counts
-    auto populations = sim["simulation"]["initialPopulation"];
+    auto populations = simJson["simulation"]["initialPopulation"];
 
     // --- set up RNG once per load ---
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> distX(
-        0, sim["simulation"]["world"]["size"]["width"].get<int>());
+        0, simJson["simulation"]["world"]["size"]["width"].get<int>());
     std::uniform_real_distribution<float> distY(
-        0, sim["simulation"]["world"]["size"]["height"].get<int>());
+        0, simJson["simulation"]["world"]["size"]["height"].get<int>());
 
-    int speciesCount = populations.size();
-    int i = 0;
+    int speciesCount = static_cast<int>(populations.size());
 
+    // Precompute species colours (single pass)
+    int idx = 0;
     for (auto& [speciesName, popData] : populations.items()) {
-        float hue = (i * 360.0f) / speciesCount;  // evenly spaced hues
+        float hue = (idx * 360.0f) / std::max(1, speciesCount);  // evenly spaced hues
         m_speciesColors[speciesName] = hslToRgb(hue, 0.7f, 0.5f); // 70% sat, 50% lightness
-        i++;
+        ++idx;
     }
 
 
@@ -114,10 +139,6 @@ void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulatio
         int total = popData["total"];
 		int males = popData["male"];
 		int females = popData["female"];
-
-        float hue = (i * 360.0f) / speciesCount;  // evenly spaced hues
-        m_speciesColors[speciesName] = hslToRgb(hue, 0.7f, 0.5f); // 70% sat, 50% lightness
-        i++;
 
 	    // load species data JSON (per-species data)
 	    std::string speciesFile = "resources/definitions/species/" + speciesName + ".json";
@@ -130,7 +151,7 @@ void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulatio
 	    sf >> speciesJson;
 
         // create entities
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < total; ++i) {
             auto entity = m_entityManager.addEntity(speciesName);
 
             // --- add Compoennts ---
@@ -149,13 +170,13 @@ void Scene_Simulation::loadDefaultSimulation(const std::string& defaultSimulatio
             repro.canReproduce = true;
 
             // TODO
-            // default AI 
             entity->add<CBehavior>();
         }
         std::cout << "Loaded " << total << " " << speciesName << " entities.\n";
     }
 
-    	
+    // Now flush pending entities -> this also calls EntitySignatureChanged for newly added entities
+    m_entityManager.update();    	
 }
 
 void Scene_Simulation::sDoAction(const Action& action) {
@@ -244,4 +265,12 @@ void Scene_Simulation::sRender() {
             win.draw(circle);
         }
     }
+}
+
+// helpers
+
+// simple mapping from a simulation key/name to a file path.
+// Right now we just look in a "saves/" folder; you can change this.
+std::string Scene_Simulation::buildSavePathFromKey(const std::string& key) {
+    return "saves/" + key + ".json";
 }
