@@ -108,10 +108,10 @@ sf::Sound& Assets::getSound(const std::string& name) {
 
 // getters for maps
 
-const std::map<std::string, sf::Texture>& Assets::getTextureMap() const {
+const std::unordered_map<std::string, sf::Texture>& Assets::getTextureMap() const {
     return m_textureMap;
 }
 
-std::map<std::string, std::unique_ptr<sf::Sound>>& Assets::getSoundMap() {
+std::unordered_map<std::string, std::unique_ptr<sf::Sound>>& Assets::getSoundMap() {
     return m_soundMap;
 }

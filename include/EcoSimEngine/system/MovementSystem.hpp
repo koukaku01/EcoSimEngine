@@ -9,20 +9,20 @@
 class MovementSystem : public System {
 public:
     // EntityManager must implement getEntityById(size_t)
-    void update(EntityManager& em, float dt)
+    void update(EntityManager& em, ComponentManager& cm, float dt)
     {
         if (dt <= 0.0f) return; // avoid division by zero
 
         for (EntityId id : mEntities) {
             auto e = em.getEntityById(id);
             if (!e || !e->isActive()) continue;
-            if (!e->has<CTransform>()) continue; // has position and velocity
+            if (!cm.has<CTransform>(id)) continue; // has position and velocity
 
-            auto& t = e->get<CTransform>();
+            auto& t = cm.get<CTransform>(id);
 
             // clamp speed using behavior if present
             float maxSpeed = 10.0f;
-            if (e->has<CBehavior>()) maxSpeed = e->get<CBehavior>().maxSpeed;
+            if (cm.has<CBehavior>(id)) maxSpeed = cm.get<CBehavior>(id).maxSpeed;
 
             float sp = t.velocity.length();
             if (sp > maxSpeed) t.velocity = t.velocity * (maxSpeed / sp);

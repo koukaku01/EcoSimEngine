@@ -2,17 +2,18 @@
 
 #include <map>
 #include <string>
+#include <unordered_map>
 
-#include <SFML/Audio/Sound.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Audio/Sound.hpp>
+
 
 class Assets {
-	std::map<std::string, sf::Texture> m_textureMap;
-	std::map<std::string, sf::Font> m_fontMap;
-
-	std::map<std::string, sf::SoundBuffer> m_soundBuffers;
-    std::map<std::string, std::unique_ptr<sf::Sound>> m_soundMap; // store sounds as unique_ptr
+	std::unordered_map<std::string, sf::Texture> m_textureMap;
+	std::unordered_map<std::string, sf::Font> m_fontMap;
+	std::unordered_map<std::string, sf::SoundBuffer> m_soundBuffers;
+	std::unordered_map<std::string, std::unique_ptr<sf::Sound>> m_soundMap; // store sounds as unique_ptr
 
 	void addTexture(const std::string& name, const std::string& path);
 	void addFont(const std::string& name, const std::string& path);
@@ -28,6 +29,6 @@ public:
 	[[nodiscard]] const sf::Font& getFont(const std::string& name) const;
 	[[nodiscard]] sf::Sound& getSound(const std::string& name);
 
-    [[nodiscard]] const std::map<std::string, sf::Texture>& getTextureMap() const;
-	[[nodiscard]] std::map<std::string, std::unique_ptr<sf::Sound>>& getSoundMap();
+    [[nodiscard]] const std::unordered_map<std::string, sf::Texture>& getTextureMap() const;
+	[[nodiscard]] std::unordered_map<std::string, std::unique_ptr<sf::Sound>>& getSoundMap();
 };

@@ -6,6 +6,7 @@
 
 #include "EcoSimEngine/ecs/Entity.hpp"
 #include "EcoSimEngine/system/SystemManager.hpp"
+#include "EcoSimEngine/ecs/ComponentManager.hpp"
 
 
 using EntityVec = std::vector<std::shared_ptr<Entity>>;
@@ -32,6 +33,8 @@ class EntityManager {
 
 	// Pointer to the engine's SystemManger so we can notify on signature change / destruction
     SystemManager* m_systemManager{ nullptr };
+    ComponentManager* m_componentManager{ nullptr };
+
 
     /**
      * @brief Removes all inactive entities from the given vector.
@@ -53,10 +56,15 @@ class EntityManager {
     }
 
 public:
+    // Require dependencies in the constructor
+    EntityManager(SystemManager* sm, ComponentManager* cm)
+        : m_systemManager(sm), m_componentManager(cm) {
+    }
+
 	EntityManager() = default;
 
-    // Give the EntityManager a reference to the SystemManager so it can notify about changes.
-    void setSystemManager(SystemManager* sm) { m_systemManager = sm; }
+    void setSystemManager(SystemManager* sm) { m_systemManager = sm; }     // Give the EntityManager a reference to the SystemManager so it can notify about changes.
+	void setComponentManager(ComponentManager* cm) { m_componentManager = cm; } // Give the EntityManager a reference to the ComponentManager so it can manage components.
 
     // Find entity by numeric id. Linear search — fine for small projects / prototypes.
     std::shared_ptr<Entity> getEntityById(size_t id) {
@@ -72,19 +80,17 @@ public:
     // Add a component via the manager so systems are notified automatically.
     template<typename T, typename... Args>
     T& addComponent(const std::shared_ptr<Entity>& entity, Args&&... args) {
-        auto& comp = entity->add<T>(std::forward<Args>(args)...);
-        if (m_systemManager) {
-            m_systemManager->EntitySignatureChanged(entity->id(), entity->signature());
-        }
+        auto & comp = m_componentManager->add<T>(entity->id(), std::forward<Args>(args)...);
+		entity->signature().set(ComponentType<T>::index, true); // mark component as present in signature (set bit ON)
+		if (m_systemManager) m_systemManager->EntitySignatureChanged(entity->id(), entity->signature()); // notify systemManager of signature change
         return comp;
     }
 
     template<typename T>
     void removeComponent(const std::shared_ptr<Entity>& entity) {
-        entity->remove<T>();
-        if (m_systemManager) {
-            m_systemManager->EntitySignatureChanged(entity->id(), entity->signature());
-        }
+        m_componentManager->remove<T>(entity->id());
+		entity->signature().set(ComponentType<T>::index, false); // mark component as absent in signature (set bit OFF)
+        if (m_systemManager) m_systemManager->EntitySignatureChanged(entity->id(), entity->signature());
     }
 
     // Prefer calling this instead of entity->destroy() so systems are informed.
@@ -94,7 +100,20 @@ public:
         if (m_systemManager) m_systemManager->EntityDestroyed(entity->id());
     }
 
+    template<typename T>
+    bool hasComponent(const std::shared_ptr<Entity>& entity) const {
+        return m_componentManager->has<T>(entity->id());
+    }
 
+    template<typename T>
+    T& getComponent(const std::shared_ptr<Entity>& entity) {
+        return m_componentManager->get<T>(entity->id());
+    }
+
+    template<typename T>
+    const T& getComponent(const std::shared_ptr<Entity>& entity) const {
+        return m_componentManager->get<T>(entity->id());
+    }
 
     void update() {
         // Add entities from m_entitiesToAdd to:

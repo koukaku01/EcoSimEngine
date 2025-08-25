@@ -9,16 +9,16 @@
 
 class AISystem : public System {
 public:
-    void update(EntityManager& em, float dt)
+    void update(EntityManager& em, ComponentManager& cm, float dt)
     {
         for (EntityId id : mEntities)
         {
             auto e = em.getEntityById(id);
             if (!e || !e->isActive()) continue;
-            if (!e->has<CBehavior>() || !e->has<CTransform>()) continue;
-
-            auto& behavior = e->get<CBehavior>();
-            auto& t = e->get<CTransform>();
+            if (!cm.has<CBehavior>(id) || !cm.has<CTransform>(id)) continue;
+            
+            auto& behavior = cm.get<CBehavior>(id);
+            auto& t = cm.get<CTransform>(id);
 
             behavior.stateTimer -= dt;
             if (behavior.stateTimer <= 0.0f) {
