@@ -13,6 +13,14 @@ class SystemManager {
     std::unordered_map<std::type_index, Signature> m_signatures{};
     std::unordered_map<std::type_index, std::shared_ptr<System>> m_systems{};
 public:
+    SystemManager() {
+        m_systems.reserve(16);          // reserve a small number, TWEAK as needed
+		m_signatures.reserve(16);
+    }
+
+
+
+
     // Register a system and return a shared_ptr to it
     template<typename T, typename... Args>
     std::shared_ptr<T> RegisterSystem(Args&&... args) {
@@ -41,7 +49,9 @@ public:
     // Called when an entity's signature changed (add/remove component)
     void EntitySignatureChanged(EntityId id, const Signature& entitySignature) {
         for (auto& [type, system] : m_systems) {
-            const Signature& sSig = m_signatures[type];
+            auto sIt = m_signatures.find(type);
+            if (sIt == m_signatures.end()) continue; // no signature set
+            const Signature& sSig = sIt->second;
             if ((entitySignature & sSig) == sSig) system->mEntities.insert(id);
             else system->mEntities.erase(id);
         }

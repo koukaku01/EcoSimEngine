@@ -22,23 +22,21 @@ protected:
     sf::RenderWindow m_window;
     sf::Clock m_deltaClock; // for imgui
     Assets m_assets;
+
     SceneManager m_sceneManager;
-	SystemManager m_systemManager;
+    SystemManager m_systemManager;
+    ComponentManager m_componentManager;
+    EntityManager m_entityManager;
+
     size_t m_simulationSpeed{ 1 };
     bool m_running{ true };
     std::shared_ptr<Scene> currentScene();
-
-     ComponentManager m_componentManager; // REFACTORING ADD
-     EntityManager m_entityManager;
-
 
     void init(const std::string& path);
 
     void update();
 
     void sUserInput();
-
-    
 
 public:
     explicit SimulationEngine(const std::string& path);
