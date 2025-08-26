@@ -7,8 +7,8 @@
 #include "EcoSimEngine/ecs/Components.hpp"
 #include "EcoSimEngine/scene/Scene.hpp"
 #include "EcoSimEngine/Utils/SpatialHash.hpp"
-#include "EcoSimEngine/external/nlohmann/json.hpp"
 
+#include <nlohmann/json.hpp>
 
 class Scene_Simulation : public Scene {
 private:

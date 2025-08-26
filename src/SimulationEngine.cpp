@@ -2,10 +2,10 @@
 #include <string>
 #include <fstream>
 
-#include "EcoSimEngine/external/nlohmann/json.hpp"
+#include <imgui/imgui.h>
+#include <imgui-sfml/imgui-SFML.h>
+#include <nlohmann/json.hpp>
 
-//#include "imgui.h"
-//#include "imgui-SFML.h"
 #include "SFML/Window/Event.hpp"
 
 #include "EcoSimEngine/ecs/Assets.hpp"
@@ -59,11 +59,11 @@ void SimulationEngine::init(const std::string& path) {
         throw std::runtime_error(std::string("Asset loading error: ") + e.what());
     }
 
-    /*
+    
     if (!ImGui::SFML::Init(m_window)) {
         std::cerr << "Failed ImGui initialization\n";
     }
-    */
+    
 
 
     // Movement system
@@ -104,9 +104,9 @@ sf::RenderWindow& SimulationEngine::window() {
 void SimulationEngine::run() {
     while (isRunning()) {
         sUserInput();
-     //   ImGui::SFML::Update(m_window, m_deltaClock.restart());
+        ImGui::SFML::Update(m_window, m_deltaClock.restart());
         update();
-     //   ImGui::SFML::Render(m_window);
+        ImGui::SFML::Render(m_window);
         m_window.display();
     }
 }
@@ -114,7 +114,7 @@ void SimulationEngine::run() {
 void SimulationEngine::sUserInput() {
     while (auto eventOpt = m_window.pollEvent()) {
 		auto& event = *eventOpt;
-     ///ImGui::SFML::ProcessEvent(m_window, event); // need refactor
+        ImGui::SFML::ProcessEvent(m_window, event); // TO REFACTOR ?
 
 		// Handle window closed
         if (event.is<sf::Event::Closed>()) {

@@ -4,7 +4,7 @@
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
-#include "EcoSimEngine/external/nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 #include "EcoSimEngine/ecs/Assets.hpp"
 

@@ -9,10 +9,9 @@
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
 
-#include "EcoSimEngine/external/nlohmann/json.hpp"
-
-// #include "imgui.h"
-// #include "imgui-SFML.h"
+#include <imgui/imgui.h>
+#include <imgui-sfml/imgui-SFML.h>
+#include <nlohmann/json.hpp>
 
 #include "EcoSimEngine/ecs/Components.hpp"
 #include "EcoSimEngine/SimulationEngine.hpp"
