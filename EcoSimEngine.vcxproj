@@ -134,7 +134,7 @@
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\ecs\Assets.cpp" />
-    <ClCompile Include="src\GUIManager.cpp" />
+    <ClCompile Include="src\GUI\GUIManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\Scene_Menu.cpp" />
@@ -144,10 +144,10 @@
   <ItemGroup>
     <ClInclude Include="include\EcoSimEngine\ecs\Action.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Assets.hpp" />
-    <ClInclude Include="include\EcoSimEngine\ecs\ComponentIndices.hpp" />
-    <ClInclude Include="include\EcoSimEngine\ecs\ComponentManager.hpp" />
-    <ClInclude Include="include\EcoSimEngine\ecs\Components.hpp" />
-    <ClInclude Include="include\EcoSimEngine\ecs\ComponentType.hpp" />
+    <ClInclude Include="include\EcoSimEngine\component\ComponentIndices.hpp" />
+    <ClInclude Include="include\EcoSimEngine\component\ComponentManager.hpp" />
+    <ClInclude Include="include\EcoSimEngine\component\Components.hpp" />
+    <ClInclude Include="include\EcoSimEngine\component\ComponentType.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\Entity.hpp" />
     <ClInclude Include="include\EcoSimEngine\ecs\EntityManager.hpp" />
     <ClInclude Include="external\imgui-sfml\imconfig-SFML.h" />
@@ -160,7 +160,8 @@
     <ClInclude Include="external\imgui\imstb_textedit.h" />
     <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\nlohmann\json.hpp" />
-    <ClInclude Include="include\EcoSimEngine\GUIManager.hpp" />
+    <ClInclude Include="include\EcoSimEngine\GUI\GUICommand.hpp" />
+    <ClInclude Include="include\EcoSimEngine\GUI\GUIManager.hpp" />
     <ClInclude Include="include\EcoSimEngine\scene\Scene.hpp" />
     <ClInclude Include="include\EcoSimEngine\scene\SceneManager.hpp" />
     <ClInclude Include="include\EcoSimEngine\scene\Scene_Menu.hpp" />

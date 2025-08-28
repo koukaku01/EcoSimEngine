@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "EcoSimEngine/GUI/GUICommand.hpp"
+
 #include <memory>
 
 class SimulationEngine;
@@ -13,7 +15,7 @@ class GUIManager {
 
 	void buildMenuBar();
 	void buildOverlays();
-	void handleMenuAction(const std::string& action); // will emit commands
+	void handleMenuAction(const GUICommand cmd); // will emit commands
 
 	// helpers
 	void loaddFonts();

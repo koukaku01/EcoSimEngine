@@ -4,7 +4,7 @@
 
 #include "SFML/Graphics/Text.hpp"
 
-#include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/component/Components.hpp"
 #include "EcoSimEngine/scene/Scene.hpp"
 #include "EcoSimEngine/Utils/SpatialHash.hpp"
 

@@ -28,7 +28,7 @@ public:
 
 	[[nodiscard]] const sf::Texture& getTexture(const std::string& name) const;
 	[[nodiscard]] const sf::Font& getFont(const std::string& name) const;
-	[[bodiscard]] const std::string& getFontPath(const std::string& name) const;
+	[[nodiscard]] const std::string& getFontPath(const std::string& name) const;
 	[[nodiscard]] sf::Sound& getSound(const std::string& name);
 
     [[nodiscard]] const std::unordered_map<std::string, sf::Texture>& getTextureMap() const;

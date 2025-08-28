@@ -8,7 +8,7 @@
 #include "EcoSimEngine/scene/SceneManager.hpp"
 #include "EcoSimEngine/ecs/Assets.hpp"
 #include "EcoSimEngine/system/SystemManager.hpp"
-#include "EcoSimEngine/GUIManager.hpp"
+#include "EcoSimEngine/GUI/GUIManager.hpp"
 
 struct WindowConfig {
     unsigned int width;

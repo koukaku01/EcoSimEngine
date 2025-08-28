@@ -3,9 +3,9 @@
 #include <string>
 #include <tuple>
 
-#include "EcoSimEngine/ecs/Components.hpp"
-#include "EcoSimEngine/ecs/ComponentIndices.hpp"
-#include "EcoSimEngine/ecs/ComponentType.hpp"
+#include "EcoSimEngine/component/Components.hpp"
+#include "EcoSimEngine/component/ComponentIndices.hpp"
+#include "EcoSimEngine/component/ComponentType.hpp"
 
 class EntityManager;
 

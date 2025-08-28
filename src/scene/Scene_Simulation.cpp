@@ -13,7 +13,7 @@
 #include <imgui-sfml/imgui-SFML.h>
 #include <nlohmann/json.hpp>
 
-#include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/component/Components.hpp"
 #include "EcoSimEngine/SimulationEngine.hpp"
 #include "EcoSimEngine/scene/Scene_Menu.hpp"
 #include "EcoSimEngine/scene/Scene_Simulation.hpp"

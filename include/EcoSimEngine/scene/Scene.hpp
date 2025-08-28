@@ -7,7 +7,7 @@
 
 #include "EcoSimEngine/ecs/Action.hpp"
 #include "EcoSimEngine/ecs/EntityManager.hpp"
-#include "EcoSimEngine/ecs/ComponentManager.hpp"
+#include "EcoSimEngine/component/ComponentManager.hpp"
 
 // Forward declaration to break circular include
 class SimulationEngine;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EcoSimEngine/system/System.hpp"
-#include "EcoSimEngine/ecs/ComponentIndices.hpp"
+#include "EcoSimEngine/component/ComponentIndices.hpp"
 #include "EcoSimEngine/ecs/Entity.hpp"
 #include "EcoSimEngine/ecs/EntityManager.hpp"
 

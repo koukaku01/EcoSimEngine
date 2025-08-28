@@ -1,7 +1,7 @@
 #pragma once
 
-#include "EcoSimEngine/ecs/ComponentIndices.hpp"
-#include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/component/ComponentIndices.hpp"
+#include "EcoSimEngine/component/Components.hpp"
 
 template<typename T> struct ComponentType; // primary template left undefined
 
