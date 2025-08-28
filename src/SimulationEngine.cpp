@@ -59,12 +59,9 @@ void SimulationEngine::init(const std::string& path) {
         throw std::runtime_error(std::string("Asset loading error: ") + e.what());
     }
 
-    
-    if (!ImGui::SFML::Init(m_window)) {
-        std::cerr << "Failed ImGui initialization\n";
-    }
-    
-
+    // imGui
+    m_guiManager = std::make_unique<GUIManager>(this);
+    m_guiManager->init(m_window);
 
     // Movement system
     auto movement = m_systemManager.RegisterSystem<MovementSystem>();
@@ -104,10 +101,33 @@ sf::RenderWindow& SimulationEngine::window() {
 void SimulationEngine::run() {
     while (isRunning()) {
         sUserInput();
-        ImGui::SFML::Update(m_window, m_deltaClock.restart());
+
+        sf::Time dt = m_deltaClock.restart();
+        ImGui::SFML::Update(m_window, dt);
+
         update();
+
+        if (auto scene = currentScene()) {
+            scene->sRender(); // Scene draws SFML content
+        }
+
+        // GUI update & build (before ImGui::SFML::Render)
+        if (m_guiManager) {
+            m_guiManager->update(m_window, dt);
+            m_guiManager->render();
+        }
+        // Scene-specific UI (overlay / inspector)
+        if (auto scene = currentScene()) {
+            scene->onGui();
+        }
+
+
         ImGui::SFML::Render(m_window);
         m_window.display();
+    }
+
+    if (m_guiManager) {
+        m_guiManager->shutdown();
     }
 }
 

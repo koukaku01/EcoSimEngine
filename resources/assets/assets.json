@@ -4,7 +4,7 @@
         "Foo_stair": "resources/assets/textures/foo_stair.png"
     },
     "fonts": {
-        "Main": "resources/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf"
+        "Main": "resources/assets/fonts/Roboto/static/RobotoRegular.ttf"
     },
     "sounds": {
         "Foo": "resources/assets/sounds/foo_themeSong.ogg"

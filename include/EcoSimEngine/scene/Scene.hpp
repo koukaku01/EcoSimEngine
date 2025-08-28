@@ -46,4 +46,7 @@ public:
     [[nodiscard]] const ActionMap& getActionMap() const;
 
     void drawLine(const Vec2f& p1, const Vec2f& p2);
+
+    // Scene-specific GUI hook
+    virtual void onGui() {};
 };
