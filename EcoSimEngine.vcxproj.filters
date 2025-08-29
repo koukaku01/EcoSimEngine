@@ -149,7 +149,10 @@
     <ClInclude Include="include\EcoSimEngine\GUI\GUIManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EcoSimEngine\GUI\GUICommand.hpp">
+    <ClInclude Include="include\EcoSimEngine\event\EventBus.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\event\Events.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,9 +15,8 @@ enum class MenuState {
 };
 
 class Scene_Menu : public Scene {
-protected:
     MenuState m_menuState{ MenuState::Main };
-
+protected:
     std::unique_ptr<sf::Text> m_titleText;
     std::string m_title{ "Main Menu" };
 
@@ -39,4 +38,5 @@ public:
     explicit Scene_Menu(SimulationEngine* simulationEngine = nullptr);
 
     void sRender() override;
+
 };

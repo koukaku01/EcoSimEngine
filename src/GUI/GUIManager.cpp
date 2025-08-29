@@ -1,6 +1,6 @@
 #include "EcoSimEngine/GUI/GUIManager.hpp"
 #include "EcoSimEngine/SimulationEngine.hpp"
-#include "EcoSimEngine/GUI/GUICommand.hpp"
+#include "EcoSimEngine/event/Events.hpp"
 
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -51,11 +51,11 @@ void GUIManager::buildMenuBar() {
 	if (!ImGui::BeginMainMenuBar()) return;
 
 	if (ImGui::BeginMenu("File")) {
-		if (ImGui::MenuItem("New Simulation")) handleMenuAction(GUICommand::File_NewSimulation);
-		if (ImGui::MenuItem("Load Simulation")) handleMenuAction(GUICommand::File_LoadSimulation);
-		if (ImGui::MenuItem("Save Simulation")) handleMenuAction(GUICommand::File_SaveSimulation);
+		if (ImGui::MenuItem("New Simulation")) emitEvent(Event::GUICommand::File_NewSimulation);
+		if (ImGui::MenuItem("Load Simulation")) emitEvent(Event::GUICommand::File_LoadSimulation);
+		if (ImGui::MenuItem("Save Simulation")) emitEvent(Event::GUICommand::File_SaveSimulation);
 		ImGui::Separator();
-		if (ImGui::MenuItem("Quit")) handleMenuAction(GUICommand::App_Quit);
+        if (ImGui::MenuItem("Quit")) emitEvent(Event::GUICommand::App_Quit);
 		ImGui::EndMenu();
 	}
 
@@ -68,7 +68,7 @@ void GUIManager::buildMenuBar() {
 	}
 
 	if (ImGui::BeginMenu("Simulation")) {
-		if (ImGui::MenuItem("Pause/Resume (Space)")) handleMenuAction(GUICommand::Sim_TogglePause);
+		if (ImGui::MenuItem("Pause/Resume (Space)")) emitEvent(Event::GUICommand::Sim_TogglePause);
 		ImGui::EndMenu();
 	}
 
@@ -83,29 +83,6 @@ void GUIManager::buildOverlays() {
 	ImGui::End();
 }
 
-void GUIManager::handleMenuAction(const GUICommand cmd) {
-	// LEGACY FOR REFERENCE, REMOVE
-	//// Prefer emitting events/commands. Here simple direct examples:
-	//if (action == "app.quit") m_engine->quit();
-	//else if (action == "sim.toggle_pause") {
-	//	// toggling a simple flag (you can wrap as Event)
-	//	// m_engine->togglePause(); // add as needed
-	//}
-	//// or use an EventBus: m_engine->eventBus().emit(action, ...);
-
-	switch (cmd) {
-	case GUICommand::App_Quit:
-		m_engine->quit();
-		break;
-	case GUICommand::Sim_TogglePause:
-		// TODO
-		break;
-	case GUICommand::None:
-	default:
-		break;
-	}
-
-}
 
 // ------------------------------------------------------------------
 // helpers
@@ -158,4 +135,15 @@ void GUIManager::loaddFonts() {
 
 	// Confirm everything
 	std::cout << "ImGui font count after UpdateFontTexture: " << io.Fonts->Fonts.Size << std::endl;
+}
+
+
+// ------------------------------------------------------------------
+// Syntactic Sugar
+// ------------------------------------------------------------------
+
+void GUIManager::emitEvent(Event::GUICommand cmd) {
+	if (cmd != Event::GUICommand::None) {
+		m_engine->eventBus().publish(cmd);
+	}
 }
