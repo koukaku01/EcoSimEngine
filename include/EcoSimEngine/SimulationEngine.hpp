@@ -8,6 +8,7 @@
 #include "EcoSimEngine/scene/SceneManager.hpp"
 #include "EcoSimEngine/ecs/Assets.hpp"
 #include "EcoSimEngine/system/SystemManager.hpp"
+#include "EcoSimEngine/GUI/GUIManager.hpp"
 
 struct WindowConfig {
     unsigned int width;
@@ -27,6 +28,7 @@ protected:
     SystemManager m_systemManager;
     ComponentManager m_componentManager;
     EntityManager m_entityManager;
+    std::unique_ptr<GUIManager> m_guiManager;
 
     size_t m_simulationSpeed{ 1 };
     bool m_running{ true };

@@ -4,11 +4,11 @@
 
 #include "SFML/Graphics/Text.hpp"
 
-#include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/component/Components.hpp"
 #include "EcoSimEngine/scene/Scene.hpp"
 #include "EcoSimEngine/Utils/SpatialHash.hpp"
-#include "EcoSimEngine/external/nlohmann/json.hpp"
 
+#include <nlohmann/json.hpp>
 
 class Scene_Simulation : public Scene {
 private:
@@ -43,7 +43,6 @@ protected:
     void onEnd() override;
     void sDoAction(const Action& action) override;
     void sRender() override;
-    //void sGUI();
 
 public:
     // simKey = empty -> create new simulation from default config
@@ -53,4 +52,6 @@ public:
 
 	// helpers
     std::string buildSavePathFromKey(const std::string& key);
+
+    void onGui();
 };

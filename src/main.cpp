@@ -4,7 +4,8 @@
 // 
 // external libraries used:
 // - SFML 3.0.0
-// - nlohmann/json
+// - nlohmann/json 3.12.0
+// - ImGui-SFML 3.0
 
 #include <SFML/Graphics.hpp>
 #include "EcoSimEngine/SimulationEngine.hpp"

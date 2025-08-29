@@ -2,7 +2,7 @@
 #pragma once
 
 #include "EcoSimEngine/system/System.hpp"
-#include "EcoSimEngine/ecs/ComponentIndices.hpp"
+#include "EcoSimEngine/component/ComponentIndices.hpp"
 
 #include <typeindex>
 #include <unordered_map>

@@ -9,12 +9,11 @@
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
 
-#include "EcoSimEngine/external/nlohmann/json.hpp"
+#include <imgui/imgui.h>
+#include <imgui-sfml/imgui-SFML.h>
+#include <nlohmann/json.hpp>
 
-// #include "imgui.h"
-// #include "imgui-SFML.h"
-
-#include "EcoSimEngine/ecs/Components.hpp"
+#include "EcoSimEngine/component/Components.hpp"
 #include "EcoSimEngine/SimulationEngine.hpp"
 #include "EcoSimEngine/scene/Scene_Menu.hpp"
 #include "EcoSimEngine/scene/Scene_Simulation.hpp"
@@ -262,6 +261,31 @@ void Scene_Simulation::sRender() {
         win.draw(circle);
     }
 }
+
+void Scene_Simulation::onGui() {
+    // Example overlay window showing simulation info
+    ImGui::Begin("Simulation Info", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+
+    // Frame/time info
+    ImGui::Text("Frame: %zu", m_currentFrame);
+    ImGui::Text("Delta time: %.3f s", m_clock.getElapsedTime().asSeconds());
+
+    // Mouse info
+    ImGui::Text("Mouse Position: (%.1f, %.1f)", m_mousePos.x, m_mousePos.y);
+
+    // Toggles for debug rendering
+    ImGui::Checkbox("Draw Textures", &m_drawTextures);
+    ImGui::Checkbox("Draw Collision", &m_drawCollision);
+    ImGui::Checkbox("Draw Grid", &m_drawGrid);
+    ImGui::Checkbox("Follow Entity", &m_follow);
+
+    // Example of inspecting a selected entity (if you integrate DebugUISystem later)
+    // auto selected = m_simulation->debugSystem().selectedEntity();
+    // ImGui::Text("Selected entity: %zu", selected);
+
+    ImGui::End();
+}
+
 
 // helpers
 

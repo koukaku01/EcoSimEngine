@@ -33,6 +33,27 @@
     <ClCompile Include="src\scene\Scene_Simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="external\imgui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui-sfml\imgui-SFML.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\GUIManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\EcoSimEngine\ecs\Action.hpp">
@@ -41,7 +62,7 @@
     <ClInclude Include="include\EcoSimEngine\ecs\Assets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EcoSimEngine\ecs\Components.hpp">
+    <ClInclude Include="include\EcoSimEngine\component\Components.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\EcoSimEngine\ecs\Entity.hpp">
@@ -50,7 +71,7 @@
     <ClInclude Include="include\EcoSimEngine\ecs\EntityManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EcoSimEngine\external\nlohmann\json.hpp">
+    <ClInclude Include="external\nlohmann\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\EcoSimEngine\scene\Scene.hpp">
@@ -77,10 +98,10 @@
     <ClInclude Include="include\EcoSimEngine\math\Vec2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EcoSimEngine\ecs\ComponentIndices.hpp">
+    <ClInclude Include="include\EcoSimEngine\component\ComponentIndices.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EcoSimEngine\ecs\ComponentType.hpp">
+    <ClInclude Include="include\EcoSimEngine\component\ComponentType.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\EcoSimEngine\system\System.hpp">
@@ -95,14 +116,48 @@
     <ClInclude Include="include\EcoSimEngine\system\AISystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EcoSimEngine\ecs\ComponentManager.hpp">
+    <ClInclude Include="include\EcoSimEngine\component\ComponentManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui-sfml\imconfig-SFML.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui-sfml\imgui-SFML.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui-sfml\imgui-SFML_export.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\GUI\GUIManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EcoSimEngine\GUI\GUICommand.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\Roboto\Roboto-Italic-VariableFont_wdth,wght.ttf" />
     <Font Include="assets\fonts\Roboto\Roboto-VariableFont_wdth,wght.ttf" />
-    <Font Include="resources\assets\fonts\Roboto\Roboto-VariableFont_wdth,wght.ttf" />
+    <Font Include="resources\assets\fonts\Roboto\Roboto.ttf" />
+    <Font Include="resources\assets\fonts\Roboto\static\RobotoRegular.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

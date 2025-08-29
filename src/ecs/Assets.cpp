@@ -4,7 +4,7 @@
 
 #include <SFML/Audio/SoundBuffer.hpp>
 
-#include "EcoSimEngine/external/nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 #include "EcoSimEngine/ecs/Assets.hpp"
 
@@ -28,7 +28,7 @@ void Assets::loadFromFile(const std::string& path) {
         }
     }
 
-    // -- Fonts --
+    // -- Fonts & FontPaths --
     if (j.contains("fonts") && j["fonts"].is_object()) {
         for (const auto& [name, fontPath] : j["fonts"].items()) {
             addFont(name, fontPath.get<std::string>());
@@ -59,6 +59,7 @@ void Assets::addFont(const std::string& name, const std::string& path) {
         throw std::runtime_error("Could not load font: " + path);
     }
     m_fontMap[name] = font;
+    m_fontPathMap[name] = path;
 }
 
 void Assets::addSound(const std::string& name, const std::string& path) {
@@ -84,6 +85,11 @@ const sf::Texture& Assets::getTexture(const std::string& name) const {
 const sf::Font& Assets::getFont(const std::string& name) const {
     assert(m_fontMap.find(name) != m_fontMap.end());
     return m_fontMap.at(name);
+}
+
+const std::string& Assets::getFontPath(const std::string& name) const {
+    assert(m_fontPathMap.find(name) != m_fontPathMap.end());
+    return m_fontPathMap.at(name);
 }
 
 sf::Sound& Assets::getSound(const std::string& name) {

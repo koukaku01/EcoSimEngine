@@ -6,7 +6,7 @@
 		"vsync": false
 	},
 	"font": {
-		"path": "resources/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf",
+		"path": "resources/assets/fonts/Roboto/static/RobotoRegular.ttf",
 		"size": 24,
 		"color": [ 249, 249, 249 ]
 	},

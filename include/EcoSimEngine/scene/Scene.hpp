@@ -7,7 +7,7 @@
 
 #include "EcoSimEngine/ecs/Action.hpp"
 #include "EcoSimEngine/ecs/EntityManager.hpp"
-#include "EcoSimEngine/ecs/ComponentManager.hpp"
+#include "EcoSimEngine/component/ComponentManager.hpp"
 
 // Forward declaration to break circular include
 class SimulationEngine;
@@ -46,4 +46,7 @@ public:
     [[nodiscard]] const ActionMap& getActionMap() const;
 
     void drawLine(const Vec2f& p1, const Vec2f& p2);
+
+    // Scene-specific GUI hook
+    virtual void onGui() {};
 };

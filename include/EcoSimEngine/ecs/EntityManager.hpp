@@ -6,7 +6,7 @@
 
 #include "EcoSimEngine/ecs/Entity.hpp"
 #include "EcoSimEngine/system/SystemManager.hpp"
-#include "EcoSimEngine/ecs/ComponentManager.hpp"
+#include "EcoSimEngine/component/ComponentManager.hpp"
 
 
 using EntityVec = std::vector<std::shared_ptr<Entity>>;
