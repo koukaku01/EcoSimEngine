@@ -58,6 +58,11 @@ public:
 		throw std::runtime_error("Current scene not found: " + m_currentSceneKey);
 	}
 
+	std::shared_ptr<Scene> getMenuScene() {
+		auto it = m_staticScenes.find(sceneIDtoString(SceneID::Menu));
+		if (it != m_staticScenes.end()) return it->second;
+		return nullptr;
+	}
 
 	// ------------------------
 	// --- Scene Queries ---

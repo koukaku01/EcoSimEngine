@@ -20,6 +20,18 @@ SimulationEngine::SimulationEngine(const std::string& path)
     , m_componentManager()
     , m_entityManager(&m_systemManager, &m_componentManager)
 {
+    // Subscribe to GUICommand events early
+    m_eventBus.subscribe<Event::GUICommand>([this](const Event::GUICommand& cmd) {
+        switch (cmd) {
+        case Event::GUICommand::App_Quit: quit(); break;
+        case Event::GUICommand::Sim_TogglePause: /* toggle pause */ break;
+        case Event::GUICommand::File_NewSimulation: /* start new sim */ break;
+        case Event::GUICommand::File_LoadSimulation: /* load sim */ break;
+        case Event::GUICommand::File_SaveSimulation: /* save sim */ break;
+        default: break;
+        }
+        });
+
     init(path);
 }
 

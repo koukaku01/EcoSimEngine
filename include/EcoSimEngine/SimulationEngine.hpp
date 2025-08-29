@@ -9,6 +9,7 @@
 #include "EcoSimEngine/ecs/Assets.hpp"
 #include "EcoSimEngine/system/SystemManager.hpp"
 #include "EcoSimEngine/GUI/GUIManager.hpp"
+#include "EcoSimEngine/event/EventBus.hpp"
 
 struct WindowConfig {
     unsigned int width;
@@ -29,6 +30,7 @@ protected:
     ComponentManager m_componentManager;
     EntityManager m_entityManager;
     std::unique_ptr<GUIManager> m_guiManager;
+    EventBus m_eventBus;
 
     size_t m_simulationSpeed{ 1 };
     bool m_running{ true };
@@ -60,4 +62,5 @@ public:
     SystemManager& systemManager() noexcept { return m_systemManager; }
     EntityManager& entityManager() noexcept { return m_entityManager; }
     ComponentManager& componentManager() noexcept { return m_componentManager; }
+    EventBus& eventBus() noexcept { return m_eventBus; }
 };

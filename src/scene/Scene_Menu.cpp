@@ -166,7 +166,7 @@ void Scene_Menu::sRender() {
 
 
 void Scene_Menu::onEnd() {
-    m_simulation->quit();
+    m_simulation->eventBus().publish(Event::GUICommand::App_Quit);
 }
 
 void Scene_Menu::update() {
